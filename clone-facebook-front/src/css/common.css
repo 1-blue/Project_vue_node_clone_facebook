@@ -1,0 +1,158 @@
+:root{
+  --black-color: #232323;
+  --write-color: #f4f4f4;
+  --backgrond-color: #f0ebf8;
+}
+
+.shadow {
+  box-shadow: 0px 0px 3px gray;
+}
+
+.title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* form관련 */
+.form {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.form__list{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0;
+}
+.form__list > li {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  width: 80%;
+}
+.form__list > li > label {
+  margin-bottom: 5px;
+}
+.form__list > li > input {
+  width: 100%;
+  height: 25px;
+  border: 1px solid lightblue;
+}
+.form__list > li > textarea {
+  width: 100%;
+  border: 1px solid lightblue;
+  font-size: 1.5em;
+  resize: none;
+}
+
+/* 버튼관련 */
+.btn {
+  position: relative;
+  width: 80px;
+  height: 40px;
+  background: lightgray;
+  border: 0;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: not-allowed;
+  margin: 20px 0 10px;
+  overflow: hidden;
+}
+.btn__active {
+  background: #fe8b17;
+  cursor: pointer;
+}
+.btn::after{
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background: blue;
+  z-index: 1;
+  transform: scale(0, 1);
+  transition: all 0.3s;
+}
+.btn:hover::after{
+  transform: scale(1, 1);
+}
+.btn__text{
+  position: relative;
+  z-index: 2;
+}
+
+/* 경고문구 */
+.warning__text{
+  position: absolute;
+  top: 80%;
+  left: 60%;
+  color: red;
+}
+
+/* 아이콘 관련 */
+.icon__delete,
+.icon__modify,
+.icon__add
+.icon {
+  cursor: pointer;
+}
+.icon__delete:hover,
+.icon__modify:hover,
+.icon__add:hover,
+.icon:hover {
+  color: #3fb6b7;
+}
+.icon__delete:active,
+.icon__modify:active,
+.icon__add:active,
+.icon:active {
+  color: red;
+}
+
+/* 링크관련 */
+.link::after{
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: "";
+  width: 100%;
+  height: 0%;
+  background: var(--write-color);
+  transition: all 0.3s;
+}
+
+.link:hover{
+  text-decoration: none;
+}
+
+.link:hover::after{ 
+  height: 100%;
+}
+
+.link__text{
+  z-index: 9999;
+  color: var(--write-color);
+  transition: all 0.3s;
+}
+
+.link:hover > .link__text{
+  position: relative;
+  color: var(--black-color);
+}
+
+.router-link-active {
+  background: var(--write-color);
+}
+
+.router-link-active > .link__text {
+  background: var(--write-color);
+  color: var(--black-color);
+}
+

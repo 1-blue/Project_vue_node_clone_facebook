@@ -1,0 +1,21 @@
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 1s ease;
+}
+
+.fade-leave-from,
+.fade-enter-to {
+  opacity: 1;
+}
+
+.form__delete__effect {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 1s ease;
+}
