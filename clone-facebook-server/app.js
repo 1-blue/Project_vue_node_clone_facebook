@@ -40,7 +40,7 @@ if (process.env.NODE_ENV === "production") {
 // 시퀄라이즈 설정 ( DB )
 const { sequelize } = require("./models");
 sequelize
-  .sync({ force: true })
+  .sync({ force: false })
   .then(() => {
     console.log("db연결 성공");
   })

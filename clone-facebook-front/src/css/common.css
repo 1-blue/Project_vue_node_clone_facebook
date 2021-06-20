@@ -1,7 +1,6 @@
 :root{
-  --black-color: #232323;
-  --write-color: #f4f4f4;
-  --backgrond-color: #f0ebf8;
+  --main-color: #0f90f2;
+  --gray-color: #e4e6eb;
 }
 
 .shadow {
@@ -146,13 +145,3 @@
   position: relative;
   color: var(--black-color);
 }
-
-.router-link-active {
-  background: var(--write-color);
-}
-
-.router-link-active > .link__text {
-  background: var(--write-color);
-  color: var(--black-color);
-}
-

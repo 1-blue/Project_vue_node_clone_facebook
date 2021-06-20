@@ -1,17 +1,17 @@
 <template>
-  <section id="home__page">
-    <h1>메인페이지요</h1>
+  <section id="friend__page">
+    <h1>친구페이지요</h1>
   </section>
 </template>
 
 <script>
 export default {
-  name: "HomePage",
+  name: "FriendPage",
   components: {},
 };
 </script>
 
 <style scoped>
-#home__page {
+#friend__page {
 }
 </style>

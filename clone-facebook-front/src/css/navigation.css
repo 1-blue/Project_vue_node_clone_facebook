@@ -1,0 +1,137 @@
+/* 네이게이션 영역 배치 */
+.navigation__container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 1rem;
+}
+
+/* 네비게이션 좌측영역 */
+/* 아이콘 */
+.navigation__container__left i {
+  font-size: 2.5rem;
+  color: var(--main-color);
+}
+
+/* 네비게이션 중간영역 */
+.navigation__container__middle {
+}
+
+/* 중간아이콘 */
+.navigation__container__middle i {
+  font-size: 1.5rem;
+  padding: 1.5rem 2.5rem;
+}
+.icon__hamburger{
+  display: none;
+}
+
+/* 중간아이콘 hover */
+.navigation__container__middle i:hover {
+  background: var(--gray-color);
+}
+
+/* 네비게이션 우측영역 */
+.navigation__container__right {
+  display: flex;
+  align-items: center;
+}
+
+/* 우측아이콘  */
+.navigation__container__right i {
+  font-size: 1.4rem;
+  color: grey;
+  margin: 0.5rem;
+  cursor: pointer;
+}
+
+/* 유저이름배치해야해서 span추가해서 우측아이콘에서 공통 css적용안하고 따로 css적용함 */
+.my__info__link {
+  display: flex;
+  align-items: center;
+  padding: 0.2rem;
+  border-radius: 10%;
+  transition: all 0.5s;
+}
+.my__info__link:hover {
+  background: var(--gray-color);
+}
+.icon__messenger,
+.icon__post,
+.icon__account,
+.icon__github
+{
+  padding: 0.6rem;
+  background: var(--gray-color);
+  border-radius: 100%;
+  transition: all 0.5s;
+}
+.icon__messenger:hover,
+.icon__post:hover,
+.icon__account:hover,
+.icon__github:hover
+{
+  background: #dadce0;
+}
+
+/* 선택된 링크 ( 밑줄형태 ) */
+.router__link__active__underline {
+  border-bottom: 0.1em solid var(--main-color);
+  color: var(--main-color);
+}
+.navigation__container i {
+  position: relative;
+}
+
+/* 선택된 링크 ( 밑줄없는거 ) */
+.router__link__active{
+  background: #e7f3ff;
+  font-weight: bold;
+  color: var(--main-color) !important;
+}
+
+/* 어떤 링크인지 알려주는 메시지 */
+.navigation__container i:hover::after {
+  position: absolute;
+  bottom: -4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1rem;
+  color: white;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 1rem;
+  border-radius: 20%;
+  box-shadow: 2px 2px 3px gray;
+}
+.icon__hamburger:hover::after {
+  content: "홈";
+}
+.icon__home:hover::after {
+  content: "홈";
+}
+.icon__friend:hover::after {
+  content: "친구";
+}
+.icon__post:hover::after {
+  content: "글쓰기";
+}
+.icon__messenger:hover::after {
+  content: "메신저";
+}
+.icon__account:hover::after {
+  content: "계정";
+}
+.icon__github:hover::after {
+  content: "깃헙";
+}
+
+@media screen and (max-width: 768px) {
+  .navigation__container__middle > a > i{
+    display: none;
+  }
+  .navigation__container__middle > a:last-child > i{
+    display: flex;
+    font-size: 1.5rem;
+    padding: 1rem;
+  }
+}
