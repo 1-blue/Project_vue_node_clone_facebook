@@ -56,6 +56,9 @@
 .my__info__link:hover {
   background: var(--gray-color);
 }
+.my__info__link__username{
+  transform: translateY(-15%);
+}
 .icon__messenger,
 .icon__post,
 .icon__account,

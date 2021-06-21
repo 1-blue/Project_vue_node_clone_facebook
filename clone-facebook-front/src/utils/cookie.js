@@ -1,19 +1,19 @@
-function setToken(token) {
+function setCookie(username) {
   const date = new Date(Date.now() + 60 * 60 * 24);
-  document.cookie = `survey_auth_token=${token}; Expires=${date}; path=/;`;
+  document.cookie = `clone_facebook_username=${username}; Expires=${date}; path=/;`;
 }
 
-function getToken() {
+function getCookie() {
   const cookies = cookieParser();
 
-  return cookies["survey_auth_token"] ? cookies["survey_auth_token"] : null;
+  return cookies["clone_facebook_username"] ? cookies["clone_facebook_username"] : null;
 }
 
-function clearToken(token) {
-  document.cookie = `survey_auth_token=${token}; Expires=${Date.now()}; path=/;`;
+function clearCookie(username) {
+  document.cookie = `clone_facebook_username=${username}; Expires=${Date.now()}; path=/;`;
 }
 
-export { setToken, getToken, clearToken };
+export { setCookie, getCookie, clearCookie };
 
 // 쿠키파서
 function cookieParser() {

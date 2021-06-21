@@ -23,23 +23,16 @@
       </li>
       <li class="navigation__container__right">
         <!-- 내 정보 페이지 -->
-        <router-link
-          to="/information/1"
-          class="my__info__link"
-          ref="information"
-        >
+        <router-link to="/information/1" class="my__info__link" ref="information">
           <i class="fas fa-user-circle icon__user" ref="informationIcon"></i>
-          <span ref="informationText">유저이름</span>
+          <span ref="informationText" class="my__info__link__username">{{ username }}</span>
         </router-link>
         <!-- 글쓰기 -->
         <router-link to="/post">
           <i class="fas fa-edit icon__post" ref="post"></i>
         </router-link>
         <!-- 메신저 -->
-        <i
-          class="fab fa-facebook-messenger icon__messenger"
-          ref="messenger"
-        ></i>
+        <i class="fab fa-facebook-messenger icon__messenger" ref="messenger"></i>
         <!-- 계정 -->
         <i class="fas fa-arrow-circle-down icon__account" ref="account"></i>
         <!-- 깃헙 -->
@@ -60,6 +53,9 @@ export default {
     };
   },
   computed: {
+    username() {
+      return this.$store.state.name;
+    },
     _$information() {
       return this.$refs.information.$el;
     },
@@ -101,21 +97,13 @@ export default {
       }
 
       // 유저정보 아이콘, 텍스트 데코레이션
-      if (
-        e.target === this._$informationIcon ||
-        e.target === this._$informationText
-      ) {
+      if (e.target === this._$informationIcon || e.target === this._$informationText) {
         this.userDecoration(this._$information);
         return;
       }
 
       // 우측영역 데코레이션
-      if (
-        e.target === this._$post ||
-        e.target === this._$messenger ||
-        e.target === this._$account ||
-        e.target === this._$github
-      ) {
+      if (e.target === this._$post || e.target === this._$messenger || e.target === this._$account || e.target === this._$github) {
         this.rightDecoration(e.target);
         return;
       }
@@ -161,9 +149,7 @@ export default {
     // 클릭한 링크 데코레이션 삭제
     routerLinkRemove() {
       if (this.currentActiveLink) {
-        this.currentActiveLink.classList.remove(
-          "router__link__active__underline",
-        );
+        this.currentActiveLink.classList.remove("router__link__active__underline");
         this.currentActiveLink.classList.remove("router__link__active");
       }
     },

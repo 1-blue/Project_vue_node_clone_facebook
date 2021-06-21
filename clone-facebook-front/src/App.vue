@@ -1,7 +1,15 @@
 <template>
   <div id="app">
-    <navigation-bar></navigation-bar>
-    <router-view></router-view>
+    <!-- 로그인 했을경우 -->
+    <template v-if="isLogin">
+      <navigation-bar></navigation-bar>
+      <router-view></router-view>
+    </template>
+
+    <!-- 로그인 안했을경우 -->
+    <template v-else>
+      <router-view></router-view>
+    </template>
   </div>
 </template>
 
@@ -12,6 +20,11 @@ export default {
   name: "App",
   components: {
     NavigationBar,
+  },
+  computed: {
+    isLogin() {
+      return this.$store.getters.isLogin;
+    },
   },
 };
 </script>
