@@ -20,7 +20,6 @@ module.exports = class User extends Sequelize.Model {
         password: {
           type: Sequelize.STRING(150),
           allowNull: false,
-          unique: true,
           comment: "유저의 비밀번호 ( 로그인에 사용할 값 )",
         },
         email: {
@@ -29,10 +28,20 @@ module.exports = class User extends Sequelize.Model {
           unique: true,
           comment: "유저 이메일",
         },
-        nickname: {
+        name: {
           type: Sequelize.STRING(20),
           allowNull: false,
-          comment: "유저 닉네임",
+          comment: "유저 이름",
+        },
+        gender: {
+          type: Sequelize.TINYINT,
+          allowNull: false,
+          comment: "유저 성별",
+        },
+        birthday: {
+          type: Sequelize.STRING(20),
+          allowNull: false,
+          comment: "유저 생일",
         },
       },
       {
