@@ -2,7 +2,7 @@ require("dotenv").config();
 const router = require("express").Router();
 const passport = require("passport");
 const bcrypt = require("bcrypt");
-const { isNotLoggedIn } = require("../middlewares/auth.js");
+const { isNotLoggedIn, isLoggedIn } = require("../middlewares/auth.js");
 const { User } = require("../models/index.js");
 
 // 회원가입
@@ -59,6 +59,16 @@ router.post("/login", isNotLoggedIn, async (req, res) => {
       return res.send(user.name);
     });
   })(req, res);
+});
+
+// 로그아웃
+router.get("/logout", isLoggedIn, async (req, res) => {
+  try {
+    req.logOut();
+    res.json({ message: "success" });
+  } catch (error) {
+    res.status(400).json(error)
+  }
 });
 
 module.exports = router;
