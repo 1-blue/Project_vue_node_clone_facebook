@@ -59,6 +59,9 @@
 .my__info__link__username{
   transform: translateY(-15%);
 }
+.wrapper__option__form{
+  position: relative;
+}
 .icon__messenger,
 .icon__post,
 .icon__account,

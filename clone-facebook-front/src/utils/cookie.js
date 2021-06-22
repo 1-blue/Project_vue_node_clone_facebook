@@ -10,7 +10,9 @@ function getCookie() {
 }
 
 function clearCookie(username) {
-  document.cookie = `clone_facebook_username=${username}; Expires=${Date.now()}; path=/;`;
+  let date = new Date();
+  date.setDate(date.getDate() - 100);
+  document.cookie = `clone_facebook_username=${username}; Expires=${date}; path=/;`;
 }
 
 export { setCookie, getCookie, clearCookie };

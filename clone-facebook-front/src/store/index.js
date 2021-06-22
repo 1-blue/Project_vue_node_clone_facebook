@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import { setCookie, getCookie } from "@/utils/cookie.js";
+import { setCookie, getCookie, clearCookie } from "@/utils/cookie.js";
 
 export default createStore({
   state: {
@@ -12,13 +12,20 @@ export default createStore({
   },
   mutations: {
     SET_USER(state, name) {
+      setCookie(name);
       state.name = name;
+    },
+    LOGOUT(state) {
+      clearCookie(state.name);
+      state.name = "";
     },
   },
   actions: {
     SET_USER({ commit }, name) {
       commit("SET_USER", name);
-      setCookie(name);
+    },
+    LOGOUT({ commit }) {
+      commit("LOGOUT");
     },
   },
   modules: {},

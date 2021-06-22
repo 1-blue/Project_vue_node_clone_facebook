@@ -31,7 +31,7 @@ async function applyRegister(information) {
   }
 }
 
-// 회원가입
+// 로그인
 async function authLogin(information) {
   try {
     const { data } = await instance.post("/auth/login", information);
@@ -41,4 +41,14 @@ async function authLogin(information) {
   }
 }
 
-export { applyRegister, authLogin };
+// 로그아웃
+async function authLogout() {
+  try {
+    const { data } = await instance.get("/auth/logout");
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export { applyRegister, authLogin, authLogout };

@@ -34,7 +34,11 @@
         <!-- 메신저 -->
         <i class="fab fa-facebook-messenger icon__messenger" ref="messenger"></i>
         <!-- 계정 -->
-        <i class="fas fa-arrow-circle-down icon__account" ref="account"></i>
+        <div class="wrapper__option__form">
+          <i class="fas fa-arrow-circle-down icon__account" ref="account" @click="isShowOptionForm = !isShowOptionForm"></i>
+          <option-form :isShowOptionForm="isShowOptionForm"></option-form>
+        </div>
+
         <!-- 깃헙 -->
         <a href="https://github.com/1-blue">
           <i class="fab fa-github icon__github" ref="github"></i>
@@ -45,11 +49,17 @@
 </template>
 
 <script>
+import OptionForm from "@/components/OptionForm.vue";
+
 export default {
   name: "NavigationBar",
+  components: {
+    OptionForm,
+  },
   data() {
     return {
       currentActiveLink: "",
+      isShowOptionForm: false,
     };
   },
   computed: {
@@ -90,6 +100,12 @@ export default {
     },
 
     appendDecorationToLink(e) {
+      // 옵션버튼이외에 다른거 누르면 옵션창 닫힘
+      if (e.target !== this._$account) {
+        this.isShowOptionForm = false;
+        this._$account.classList.remove("router__link__active");
+      }
+
       // 유저정보 데코레이션
       if (e.target === this._$information) {
         this.userDecoration(e.target);
@@ -103,8 +119,18 @@ export default {
       }
 
       // 우측영역 데코레이션
-      if (e.target === this._$post || e.target === this._$messenger || e.target === this._$account || e.target === this._$github) {
+      if (e.target === this._$post || e.target === this._$messenger || e.target === this._$github) {
         this.rightDecoration(e.target);
+        return;
+      }
+
+      // optionButton
+      if (e.target === this._$account) {
+        if (this.isShowOptionForm) {
+          this.rightDecoration(e.target);
+        } else {
+          this.routerLinkRemove();
+        }
         return;
       }
 
