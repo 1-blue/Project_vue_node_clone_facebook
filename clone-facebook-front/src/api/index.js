@@ -51,4 +51,14 @@ async function authLogout() {
   }
 }
 
-export { applyRegister, authLogin, authLogout };
+// 포스트 업로드
+async function uploadPost(information) {
+  try {
+    const { data } = await instance.post("/post", information);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export { applyRegister, authLogin, authLogout, uploadPost };

@@ -1,5 +1,5 @@
 <template>
-  <form class="register__form" @submit.prevent>
+  <form class="form__register" @submit.prevent>
     <ul class="register__form__container">
       <!-- 제목 및 종료버튼 -->
       <li>
@@ -64,7 +64,7 @@
 import { applyRegister } from "@/api/index.js";
 
 export default {
-  name: "RegisterForm",
+  name: "FormRegister",
   data() {
     return {
       information: {
@@ -171,7 +171,7 @@ export default {
 </script>
 
 <style scoped>
-.register__form {
+.form__register {
   position: fixed;
   width: 100%;
   height: 100%;

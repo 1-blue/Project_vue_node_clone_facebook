@@ -1,24 +1,24 @@
 <template>
   <section id="login__page">
     <!-- 로그인폼 -->
-    <login-form :isBlind="isBlind" @change:isBlind="changeIsBlind" @change:isRegister="changeIsRegister"></login-form>
+    <form-login :isBlind="isBlind" @change:isBlind="changeIsBlind" @change:isRegister="changeIsRegister"></form-login>
 
     <!-- 회원가입폼 -->
     <template v-if="isRegister">
-      <register-form @close:registerForm="closeRegisterForm"></register-form>
+      <form-register @close:registerForm="closeRegisterForm"></form-register>
     </template>
   </section>
 </template>
 
 <script>
-import LoginForm from "@/components/LoginForm.vue";
-import RegisterForm from "@/components/RegisterForm.vue";
+import FormLogin from "@/components/form/FormLogin.vue";
+import FormRegister from "@/components/form/FormRegister.vue";
 
 export default {
   name: "LoginPage",
   components: {
-    LoginForm,
-    RegisterForm,
+    FormLogin,
+    FormRegister,
   },
   data() {
     return {

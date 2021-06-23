@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent class="login__page__form">
+  <form @submit.prevent class="form__login">
     <!-- 아이디 -->
     <input type="text" placeholder="아이디입력" class="input__id" v-model="information.id" />
 
@@ -28,7 +28,7 @@
 import { authLogin } from "@/api/index.js";
 
 export default {
-  name: "LoginForm",
+  name: "FormLogin",
   props: {
     isBlind: {
       type: Boolean,
@@ -83,11 +83,11 @@ export default {
 </script>
 
 <style scoped>
-.login__page__form {
+.form__login {
   display: flex;
   flex-direction: column;
-  min-width: 35vw;
-  min-height: 20vh;
+  width: 35vw;
+  min-width: 350px;
   background: white;
   padding: 1rem;
 }

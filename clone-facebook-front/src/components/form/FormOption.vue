@@ -1,5 +1,5 @@
 <template>
-  <section id="option__form">
+  <section id="form__option">
     <form class="option__form shadow" :class="{ action: isShowOptionForm }">
       <ul class="container__option__form">
         <!-- 프로필 -->
@@ -58,7 +58,7 @@
 import { authLogout } from "@/api/index.js";
 
 export default {
-  name: "OptionForm",
+  name: "FormOption",
   props: {
     isShowOptionForm: {
       type: Boolean,
@@ -94,7 +94,7 @@ export default {
 </script>
 
 <style scoped>
-#option__form {
+#form__option {
 }
 
 .option__form {

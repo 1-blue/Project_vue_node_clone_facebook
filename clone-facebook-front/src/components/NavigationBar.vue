@@ -36,7 +36,7 @@
         <!-- 계정 -->
         <div class="wrapper__option__form">
           <i class="fas fa-arrow-circle-down icon__account" ref="account" @click="isShowOptionForm = !isShowOptionForm"></i>
-          <option-form :isShowOptionForm="isShowOptionForm"></option-form>
+          <form-option :isShowOptionForm="isShowOptionForm"></form-option>
         </div>
 
         <!-- 깃헙 -->
@@ -49,12 +49,12 @@
 </template>
 
 <script>
-import OptionForm from "@/components/OptionForm.vue";
+import FormOption from "@/components/form/FormOption.vue";
 
 export default {
   name: "NavigationBar",
   components: {
-    OptionForm,
+    FormOption,
   },
   data() {
     return {
