@@ -58,11 +58,14 @@ module.exports = class User extends Sequelize.Model {
   }
 
   static associate(db) {
+    // 유저와 게시글
+    db.User.hasMany(db.Post, { forginKey: "postId", targetKey: "_id", onDelete: "CASCADE" });
+
     // 유저와 좋아요 ( 1 : 1 )
     db.User.hasOne(db.Like, { forginKey: "fk_userId", targetKey: "_id", onDelete: "CASCADE" });
 
     // 유저와 댓글 ( 1 : N )
-    db.User.hasMany(db.Comment, { forginKey: "userId", targetKey: "_id" });
+    db.User.hasMany(db.Comment, { forginKey: "userId", targetKey: "_id", onDelete: "CASCADE" });
 
     // 친구관계
     db.User.hasOne(db.Friend, { forginKey: "fk_userId", targetKey: "_id", onDelete: "CASCADE" })

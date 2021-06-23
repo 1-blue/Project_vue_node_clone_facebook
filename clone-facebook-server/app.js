@@ -65,8 +65,10 @@ passportConfig();
 
 // 라우팅
 const authRouter = require("./routes/auth.js");
+const postRouter = require("./routes/post.js");
 
 app.use("/auth", authRouter);
+app.use("/post", postRouter);
 
 app.listen(app.get("port"), () => {
   console.log(`${app.get("port")}번 대기중`);
