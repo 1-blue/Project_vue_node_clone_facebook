@@ -4,6 +4,9 @@ node_modules
 /config
 .env
 
+# 임시추가
+test.js
+
 # local env files
 .env.local
 .env.*.local
