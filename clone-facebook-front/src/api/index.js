@@ -61,4 +61,14 @@ async function uploadPost(information) {
   }
 }
 
-export { applyRegister, authLogin, authLogout, uploadPost };
+// 현재 유저에게 보여줄 게시글 가져오기 ( 일단은 모든 게시글중에 10개씩 끊어서 가져오는걸로 )
+async function FetchPost(pageNumber) {
+  try {
+    const { data } = await instance.get("/post", pageNumber);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export { applyRegister, authLogin, authLogout, uploadPost, FetchPost };

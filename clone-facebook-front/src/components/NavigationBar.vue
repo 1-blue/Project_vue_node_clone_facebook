@@ -94,6 +94,10 @@ export default {
       return this.$refs.home;
     },
   },
+  mounted() {
+    this.linkDecoration(this._$home);
+    // 최초 로그인시에만 실행하도록 변경해야함
+  },
   methods: {
     openLinks() {
       this.$refs.test.classList.toggle("active");
@@ -196,6 +200,7 @@ export default {
   position: sticky;
   top: 0;
   background: white;
+  z-index: 9999;
 }
 
 @import "../css/navigation.css";

@@ -44,6 +44,8 @@ export default {
       }
 
       this.$emit("submit:post", this.title, this.contents);
+      alert("게시글생성이 완료되었습니다. 메인페이지로 이동합니다.");
+      this.$router.push("/");
     },
   },
 };
