@@ -11,13 +11,19 @@
     </div>
 
     <!-- 포스트 관련 옵션버튼 -->
-    <span class="post__more__button">...</span>
+    <span class="post__more__button" @click="isShowOption = !isShowOption">...</span>
+    <form-post-option class="post__option" :username="username" v-show="isShowOption"></form-post-option>
   </div>
 </template>
 
 <script>
+import FormPostOption from "@/components/form/FormPostOption.vue";
+
 export default {
   name: "PostTitle",
+  components: {
+    FormPostOption,
+  },
   props: {
     username: {
       type: String,
@@ -31,6 +37,7 @@ export default {
   data() {
     return {
       isShowTime: false,
+      isShowOption: false,
     };
   },
   computed: {
@@ -43,6 +50,7 @@ export default {
 
 <style scoped>
 .post__title {
+  position: relative;
   display: flex;
   justify-content: space-between;
   padding: 1rem 1rem 0;
@@ -94,5 +102,11 @@ export default {
 }
 .post__more__button:hover {
   background: #dadce0;
+}
+
+.post__option {
+  position: absolute;
+  top: 100%;
+  right: 5%;
 }
 </style>

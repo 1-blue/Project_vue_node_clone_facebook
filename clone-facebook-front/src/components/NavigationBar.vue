@@ -58,11 +58,13 @@ export default {
   },
   data() {
     return {
-      currentActiveLink: "",
       isShowOptionForm: false,
     };
   },
   computed: {
+    currentLink() {
+      return this.$store.state.currentLink;
+    },
     username() {
       return this.$store.state.name;
     },
@@ -95,8 +97,13 @@ export default {
     },
   },
   mounted() {
+    // 링크 데코레이션 초기값 지정
+    this.$store.state.currentLink = this._$home;
+    this.$store.state.homeLink = this._$home;
+
     this.linkDecoration(this._$home);
     // 최초 로그인시에만 실행하도록 변경해야함
+    // 새로고침시 자동으로 mounted가 실행되서 홈링크로 데코레이션이 이동됨
   },
   methods: {
     openLinks() {
@@ -178,18 +185,17 @@ export default {
 
     // 클릭한 링크 데코레이션 삭제
     routerLinkRemove() {
-      if (this.currentActiveLink) {
-        this.currentActiveLink.classList.remove("router__link__active__underline");
-        this.currentActiveLink.classList.remove("router__link__active");
+      if (this.currentLink) {
+        this.$store.dispatch("LINK_REMOVE");
       }
     },
     // 이전에 클릭한 링크 기록하기
     routerLinkRecode(target) {
-      this.currentActiveLink = target;
+      this.$store.dispatch("LINK_RECODE", target);
     },
     // 현재 클릭한 링크에 데코레이션 넣기
     routerLinkAppend(target) {
-      target.classList.add("router__link__active__underline");
+      this.$store.dispatch("LINK_APPEND", target);
     },
   },
 };
