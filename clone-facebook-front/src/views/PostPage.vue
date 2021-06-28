@@ -20,18 +20,20 @@ export default {
       try {
         const { response } = await uploadPost({ title, contents });
 
-        alert(`"${response.title}"이 생성되었습니다. (${this.$filter.formatDate(response.createdAt)}), 메인페이지로 이동합니다.`);
+        alert(`"${response.title}"이 생성되었습니다. 메인페이지로 이동합니다.`);
+
+        this.$filter.emitter.emit("fetch:postList");
 
         this.$router.push("/");
       } catch (error) {
-        switch (error.response.status) {
-          case 500:
-            alert(error.response.message);
-            break;
-
-          default:
-            console.error("PostPage.vue >> ", error);
-            break;
+        if (error.response) {
+          switch (error.response.status) {
+            case 500:
+              alert(error.response.message);
+              break;
+          }
+        } else {
+          console.error("PostPage.vue >> ", error);
         }
       }
     },

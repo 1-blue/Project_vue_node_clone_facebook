@@ -11,8 +11,8 @@
     </div>
 
     <!-- 포스트 관련 옵션버튼 -->
-    <span class="post__more__button" @click="isShowOption = !isShowOption">...</span>
-    <form-post-option class="post__option" :username="username" v-show="isShowOption"></form-post-option>
+    <span class="post__more__button" ref="postOptionButton">...</span>
+    <form-post-option class="post__option" :username="username" :postId="postId" v-show="isShowOption" @show:editForm="$emit('show:editForm')"></form-post-option>
   </div>
 </template>
 
@@ -33,6 +33,10 @@ export default {
       type: String,
       required: true,
     },
+    postId: {
+      type: Number,
+      required: true,
+    },
   },
   data() {
     return {
@@ -43,6 +47,22 @@ export default {
   computed: {
     updatedTime() {
       return this.$filter.dateFormat(this.updatedAt, "YYYY년MM월DD일hh시mm분ss초");
+    },
+    currentClickNode() {
+      return this.$store.state.currentClickNode;
+    },
+    postOptionButton() {
+      return this.$refs.postOptionButton;
+    },
+  },
+  watch: {
+    // 옵션창외 다른 곳을 클릭하면 옵션창 닫기
+    currentClickNode(clickNode) {
+      if (clickNode === this.postOptionButton) {
+        this.isShowOption = true;
+        return;
+      }
+      this.isShowOption = false;
     },
   },
 };
@@ -107,6 +127,6 @@ export default {
 .post__option {
   position: absolute;
   top: 100%;
-  right: 5%;
+  right: 3%;
 }
 </style>

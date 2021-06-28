@@ -3,9 +3,17 @@ import { setCookie, getCookie, clearCookie } from "@/utils/cookie.js";
 
 export default createStore({
   state: {
+    // 로그인 체크를 위한 변수
     name: getCookie() || "",
+
+    // 현재 클릭한 링크를 저장할 변수 ( 링크 데코레이션에 사용 )
     currentLink: "",
+
+    // 클릭을 제외한 방법으로 링크 이동시 홈링크에 데코레이션 줄 때 사용
     homeLink: "",
+
+    // 옵션버튼외 다른곳 클릭시 옵션창 닫히게 하기위해 사용할 변수
+    currentClickNode: "",
   },
   getters: {
     isLogin(state) {

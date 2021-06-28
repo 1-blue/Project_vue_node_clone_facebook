@@ -1,12 +1,15 @@
 <template>
   <section id="navigation__bar" class="shadow">
     <ul class="navigation__container" @click="appendDecorationToLink">
+      <!-- 네비게이션바 좌측영역 -->
       <li class="navigation__container__left">
         <!-- 메인로고 -->
         <router-link to="/">
           <i class="fab fa-facebook" ref="logo"></i>
         </router-link>
       </li>
+
+      <!-- 네비게이션바 중간영역 -->
       <li class="navigation__container__middle" ref="test">
         <!-- 메인페이지 -->
         <router-link to="/">
@@ -21,6 +24,8 @@
           <i class="fas fa-bars icon__hamburger" @click="openLinks"></i>
         </router-link>
       </li>
+
+      <!-- 네비게이션바 우측영역 -->
       <li class="navigation__container__right">
         <!-- 내 정보 페이지 -->
         <router-link to="/information/1" class="my__info__link" ref="information">
@@ -35,10 +40,9 @@
         <i class="fab fa-facebook-messenger icon__messenger" ref="messenger"></i>
         <!-- 계정 -->
         <div class="wrapper__option__form">
-          <i class="fas fa-arrow-circle-down icon__account" ref="account" @click="isShowOptionForm = !isShowOptionForm"></i>
-          <form-option :isShowOptionForm="isShowOptionForm"></form-option>
+          <i class="fas fa-arrow-circle-down icon__account" ref="account" @click="isShowOption = !isShowOption"></i>
+          <form-navigation-option v-show="isShowOption"></form-navigation-option>
         </div>
-
         <!-- 깃헙 -->
         <a href="https://github.com/1-blue">
           <i class="fab fa-github icon__github" ref="github"></i>
@@ -49,21 +53,24 @@
 </template>
 
 <script>
-import FormOption from "@/components/form/FormOption.vue";
+import FormNavigationOption from "@/components/form/FormNavigationOption.vue";
 
 export default {
   name: "NavigationBar",
   components: {
-    FormOption,
+    FormNavigationOption,
   },
   data() {
     return {
-      isShowOptionForm: false,
+      isShowOption: false,
     };
   },
   computed: {
     currentLink() {
       return this.$store.state.currentLink;
+    },
+    currentClickNode() {
+      return this.$store.state.currentClickNode;
     },
     username() {
       return this.$store.state.name;
@@ -105,18 +112,24 @@ export default {
     // 최초 로그인시에만 실행하도록 변경해야함
     // 새로고침시 자동으로 mounted가 실행되서 홈링크로 데코레이션이 이동됨
   },
+  watch: {
+    // 옵션창외에 다른 곳을 누르면 옵션창 닫힘
+    currentClickNode(clickNode) {
+      if (clickNode !== this._$account) {
+        this.isShowOption = false;
+        this._$account.classList.remove("router__link__active");
+        return;
+      }
+      this.isShowOption = true;
+      return;
+    },
+  },
   methods: {
     openLinks() {
       this.$refs.test.classList.toggle("active");
     },
 
     appendDecorationToLink(e) {
-      // 옵션버튼이외에 다른거 누르면 옵션창 닫힘
-      if (e.target !== this._$account) {
-        this.isShowOptionForm = false;
-        this._$account.classList.remove("router__link__active");
-      }
-
       // 유저정보 데코레이션
       if (e.target === this._$information) {
         this.userDecoration(e.target);
@@ -137,7 +150,7 @@ export default {
 
       // optionButton
       if (e.target === this._$account) {
-        if (this.isShowOptionForm) {
+        if (this.isShowOption) {
           this.rightDecoration(e.target);
         } else {
           this.routerLinkRemove();

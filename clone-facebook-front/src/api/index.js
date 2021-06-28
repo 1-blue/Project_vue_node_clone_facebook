@@ -62,7 +62,7 @@ async function uploadPost(information) {
 }
 
 // 현재 유저에게 보여줄 게시글 가져오기 ( 일단은 모든 게시글중에 10개씩 끊어서 가져오는걸로 )
-async function FetchPost(pageNumber) {
+async function fetchPost(pageNumber) {
   try {
     const { data } = await instance.get("/post", pageNumber);
     return data;
@@ -71,4 +71,29 @@ async function FetchPost(pageNumber) {
   }
 }
 
-export { applyRegister, authLogin, authLogout, uploadPost, FetchPost };
+// 게시글 수정
+async function editPost(information) {
+  try {
+    const { data } = await instance.put("/post", information);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// 게시글 삭제
+async function removePost(postId) {
+  try {
+    const { data } = await instance.delete("/post", {
+      params: {
+        postId,
+      },
+    });
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export { applyRegister, authLogin, authLogout, uploadPost, fetchPost, editPost, removePost };

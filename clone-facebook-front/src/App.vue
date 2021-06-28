@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" @click="clickNode">
     <!-- 로그인 했을경우 -->
     <template v-if="isLogin">
       <navigation-bar></navigation-bar>
@@ -24,6 +24,11 @@ export default {
   computed: {
     isLogin() {
       return this.$store.getters.isLogin;
+    },
+  },
+  methods: {
+    clickNode(e) {
+      this.$store.state.currentClickNode = e.target;
     },
   },
 };

@@ -4,7 +4,7 @@
       <!-- 메인페이지 -->
       <li>
         <router-link to="/">
-          <i class="fas fa-home icon__home" ref="home"></i>
+          <i class="fas fa-home icon__home"></i>
           <span>메인페이지</span>
         </router-link>
       </li>
@@ -22,7 +22,6 @@
 <script>
 export default {
   name: "BookmarkPage",
-  components: {},
 };
 </script>
 

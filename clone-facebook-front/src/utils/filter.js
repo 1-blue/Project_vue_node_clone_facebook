@@ -125,7 +125,7 @@ function hourFormat(date, form) {
   // 시간에 대해서 언급하지 않으면 포멧하지않음
   if (!form.match(hourRegexp)) return;
 
-  hour = date.getHours() - 6; // 이유는 모르겠으나 6시간차이나서 일단 6빼줌
+  hour = date.getHours();
 
   // mm일 때 ( 06 )
   if (form.match(hourRegexp).length === 2 && hour < 10) {

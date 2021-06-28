@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { FetchPost } from "@/api/index.js";
+import { fetchPost } from "@/api/index.js";
 import SectionPost from "@/components/section/SectionPost.vue";
 
 export default {
@@ -27,10 +27,31 @@ export default {
       postList: [],
     };
   },
-  async created() {
+  created() {
     // 현재 유저에게 보여줄 게시글 정보 가져오기
-    const { response } = await FetchPost();
-    this.postList = response;
+    this.fetchPostList();
+  },
+  mounted() {
+    // 포스트 정보를 새로 고침해야 할 때
+    this.$filter.emitter.on("fetch:postList", this.fetchPostList);
+  },
+  methods: {
+    async fetchPostList() {
+      try {
+        const { response } = await fetchPost();
+        this.postList = response;
+      } catch (error) {
+        if (error.response) {
+          switch (error.response.status) {
+            case 500:
+              alert(error.response.message);
+              break;
+          }
+        } else {
+          console.error("HomePage.vue >> ", error);
+        }
+      }
+    },
   },
 };
 </script>
