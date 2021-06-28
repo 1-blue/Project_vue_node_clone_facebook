@@ -1,0 +1,58 @@
+.input__title {
+  width: 50%;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  border: 3px solid black;
+  padding: 0.5rem;
+}
+.input__contents {
+  width: 50%;
+  resize: none;
+  overflow: hidden;
+  min-height: 8rem;
+  border: 3px solid black;
+  border-radius: 1rem;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+}
+.input__title:focus,
+.input__contents:focus {
+  border: 3px solid blue;
+}
+
+.btn {
+  min-width: 100px;
+  width: 10%;
+  height: 8vh;
+}
+.btn__text {
+  font-size: 1.5rem;
+}
+
+@media screen and (max-width: 768px) {
+  .input__title {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    border: 2px solid black;
+    padding: 0.25rem;
+  }
+  .input__contents {
+    border: 2px solid black;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    font-size: 0.5rem;
+    font-weight: 500;
+  }
+  .input__title:focus,
+  .input__contents:focus {
+    border: 2px solid blue;
+  }
+
+  .btn {
+    height: 6vh;
+  }
+  .btn__text {
+    font-size: 1.2rem;
+  }
+}
