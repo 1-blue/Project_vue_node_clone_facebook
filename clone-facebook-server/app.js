@@ -13,6 +13,7 @@ app.set("port", process.env.PORT || 8081);
 
 // 기본설정
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/image", express.static(path.join(__dirname, "uploads")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -66,9 +67,11 @@ passportConfig();
 // 라우팅
 const authRouter = require("./routes/auth.js");
 const postRouter = require("./routes/post.js");
+const imageRouter = require("./routes/image.js");
 
 app.use("/auth", authRouter);
 app.use("/post", postRouter);
+app.use("/image", imageRouter);
 
 app.listen(app.get("port"), () => {
   console.log(`${app.get("port")}번 대기중`);

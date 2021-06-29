@@ -43,6 +43,16 @@ module.exports = class User extends Sequelize.Model {
           allowNull: false,
           comment: "유저 생일",
         },
+        profileImage: {
+          type: Sequelize.STRING(50),
+          allowNull: true,
+          comment: "유저 프로필 이미지",
+        },
+        coverImage: {
+          type: Sequelize.STRING(50),
+          allowNull: true,
+          comment: "유저 커버 이미지",
+        }
       },
       {
         sequelize, // 요거안넣으면 오류남

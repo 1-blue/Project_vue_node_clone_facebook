@@ -29,7 +29,7 @@ router.get("/", isLoggedIn, async (req, res) => {
     const response = await Post.findAll({
       include: {
         model: User,
-        attributes: ["name"],
+        attributes: ["name", "profileImage"],
       },
     });
 

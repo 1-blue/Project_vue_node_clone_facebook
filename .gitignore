@@ -7,6 +7,9 @@ node_modules
 # 임시추가
 test.js
 
+# 유저의 프로필, 커버이미지 저장한 파일
+uploads/
+
 # local env files
 .env.local
 .env.*.local

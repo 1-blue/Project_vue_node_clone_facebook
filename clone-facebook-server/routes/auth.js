@@ -7,7 +7,7 @@ const { User } = require("../models/index.js");
 
 // 회원가입
 router.post("/register", isNotLoggedIn, async (req, res) => {
-  const { name, id, password, email, gender, birthday } = req.body;
+  const { name, id, password, email, gender, birthday, imageFilename } = req.body;
 
   const hashPassword = await bcrypt.hash(password, 6);
 
@@ -18,7 +18,8 @@ router.post("/register", isNotLoggedIn, async (req, res) => {
       password: hashPassword,
       email,
       gender,
-      birthday
+      birthday,
+      profileImage: imageFilename,
     });
   
     res.json(response);
@@ -34,7 +35,7 @@ router.post("/register", isNotLoggedIn, async (req, res) => {
         return res.status(409).json({ message: "이미 가입된 이메일입니다." })
       }
     }
-    return res.status(500).json(error)
+    return res.status(500).json(error);
   }
 });
 
