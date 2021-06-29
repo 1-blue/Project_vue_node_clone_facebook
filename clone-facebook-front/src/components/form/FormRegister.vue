@@ -1,5 +1,5 @@
 <template>
-  <form class="form__register" @submit.prevent>
+  <form class="form__register" @submit.prevent enctype="multipart/form-data">
     <ul class="register__form__container">
       <!-- 제목 및 종료버튼 -->
       <li>
@@ -52,6 +52,13 @@
         </select>
       </li>
 
+      <!-- 프로필이미지 -->
+      <li class="profile__image__container">
+        <label for="profile__image" class="label__profile__image">프로필이미지</label>
+        <input type="file" name="profileImage" accept="image/*" id="profile__image" @change="getProfileImageName" ref="profileImage" />
+        <span class="select__profile__image__name">{{ profileImageName }}</span>
+      </li>
+
       <!-- 가입버튼 -->
       <li>
         <button type="submit" class="button__register" @click="register">가입하기</button>
@@ -76,10 +83,12 @@ export default {
         year: 0,
         month: 0,
         day: 0,
+        profileImage: null,
       },
       yearList: [],
       monthList: [],
       dayList: [],
+      profileImageName: "",
     };
   },
   created() {
@@ -139,6 +148,9 @@ export default {
       }
       this.information.birthday = `${this.information.year}-${this.information.month}-${this.information.day}`;
 
+      // 프로필이미지 등록
+      this.information.profileImage = this.$refs.profileImage.files[0];
+
       // 서버로 전송
       try {
         await applyRegister(this.information);
@@ -166,11 +178,27 @@ export default {
         }
       }
     },
+    getProfileImageName(e) {
+      let temp = e.target.value;
+      const index = temp.lastIndexOf("\\");
+      this.profileImageName = temp.slice(index + 1);
+    },
   },
 };
 </script>
 
 <style scoped>
+.label__profile__image {
+  display: inline-block;
+  min-width: 10vw;
+  min-height: 6vh;
+  background: #f5f6f7;
+  border: 1px solid #ccd0d5;
+  padding: 0.8rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
 .form__register {
   position: fixed;
   width: 100%;
@@ -199,6 +227,9 @@ export default {
   border: 1px solid #ccd0d5;
   padding: 0.8rem;
   border-radius: 0.5rem;
+}
+.register__form__container input[type="file"] {
+  display: none;
 }
 
 /* 라디오버튼 */
@@ -231,6 +262,11 @@ export default {
   min-height: 5vh;
   border: 1px solid #ccd0d5;
   border-radius: 0.2rem;
+}
+
+/* 프로필이미지 관련 */
+.select__profile__image__name {
+  padding: 0 0.5rem;
 }
 
 /* 종료버튼 */

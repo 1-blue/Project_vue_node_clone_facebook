@@ -32,10 +32,6 @@ export default {
       return true;
     },
   },
-  mounted() {
-    this.title = this.post.title;
-    this.contents = this.post.contents;
-  },
   methods: {
     resize(e) {
       e.target.style.height = "1px";

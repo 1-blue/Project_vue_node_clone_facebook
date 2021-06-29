@@ -1,6 +1,6 @@
 <template>
   <li class="post shadow">
-    <post-title :username="username" :updatedAt="updatedAt" :postId="post._id" @show:editForm="isShowEditForm = !isShowEditForm"></post-title>
+    <post-title :username="username" :profileImage="profileImage" :updatedAt="updatedAt" :postId="post._id" @show:editForm="isShowEditForm = !isShowEditForm"></post-title>
     <post-contents :contents="contents"></post-contents>
 
     <!-- 게시글 수정 폼 -->
@@ -36,6 +36,9 @@ export default {
   computed: {
     username() {
       return this.post.User.name;
+    },
+    profileImage() {
+      return this.post.User.profileImage;
     },
     updatedAt() {
       return this.post.updatedAt;

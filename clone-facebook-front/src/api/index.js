@@ -9,6 +9,13 @@ const instance = axios.create({
   withCredentials: true, // 이거없으면 passport의 deserializeUser()를 호출안해서 서버측에서 로그인유지가 안됨
 });
 
+const imageInstance = axios.create({
+  baseURL: "http://localhost:3000/image",
+  header: { "content-type": "multipart/form-data" },
+  timeout: 1000,
+  withCredentials: true, // 이거없으면 passport의 deserializeUser()를 호출안해서 서버측에서 로그인유지가 안됨
+});
+
 // request인터셉터 설정 ( 토큰값 넘겨주기위함 )
 // instance.interceptors.request.use(
 //   config => {
@@ -21,9 +28,41 @@ const instance = axios.create({
 //   },
 // );
 
+// 프로필이미지 업로드
+async function uploadProfileImage(profileImage) {
+  try {
+    let formData = new FormData();
+    formData.append("profileImage", profileImage);
+
+    const { data } = await imageInstance.post("/profile", formData);
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// 커버이미지 업로드
+// async function uploadCoverImage(coverImage) {
+//   try {
+//     let formData = new FormData();
+//     formData.append("coverImage", coverImage);
+
+//     const { data } = await imageInstance.post("/cover", formData);
+//     return data;
+//   } catch (error) {
+//     throw error;
+//   }
+// }
+
 // 회원가입
 async function applyRegister(information) {
   try {
+    if (information.profileImage) {
+      const { imageFilename } = await uploadProfileImage(information.profileImage);
+      information.imageFilename = imageFilename;
+    }
+
     const { data } = await instance.post("/auth/register", information);
     return data;
   } catch (error) {

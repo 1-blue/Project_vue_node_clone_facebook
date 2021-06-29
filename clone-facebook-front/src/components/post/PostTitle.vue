@@ -1,7 +1,9 @@
 <template>
   <div class="post__title">
     <!-- 포스트의 유저 이미지 -->
-    <img src="@/assets/user-default.png" alt="기본이미지" class="user__image shadow" />
+    <img :src="myProfileImage" alt="기본이미지" class="user__image shadow" v-if="profileImage" />
+    <!-- 포스트의 유저 기본 이미지 -->
+    <img src="@/assets/user-default.png" alt="기본이미지" class="user__image shadow" v-else />
 
     <!--  포스트의 유저 및 포스트 업로드시간 -->
     <div class="wrapper__post__info">
@@ -29,6 +31,10 @@ export default {
       type: String,
       required: true,
     },
+    profileImage: {
+      type: String,
+      default: "",
+    },
     updatedAt: {
       type: String,
       required: true,
@@ -53,6 +59,10 @@ export default {
     },
     postOptionButton() {
       return this.$refs.postOptionButton;
+    },
+    // 이거는 임시로 사용할 것같음 실제로 배포하게 된다면 경로가 바뀌지않을까 생각함
+    myProfileImage() {
+      return `http://localhost:3000/image/${this.profileImage}`;
     },
   },
   watch: {
