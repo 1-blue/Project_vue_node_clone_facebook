@@ -1,7 +1,7 @@
 require("dotenv").config();
 const router = require("express").Router();
 const { isLoggedIn } = require("../middlewares/auth.js");
-const { User, Post } = require("../models/index.js");
+const { User, Post, Image } = require("../models/index.js");
 
 // 포스트 업로드
 router.post("/", isLoggedIn, async (req, res) => {
@@ -26,10 +26,17 @@ router.get("/", isLoggedIn, async (req, res) => {
   // 이거 스크롤 내릴때마다 호출하고 5 ~ 10개씩 추가적으로 호출되도록 수정필요
 
   try {
+    // 게시글 찾기
     const response = await Post.findAll({
+      // 게시글에 포함된 이미지
       include: {
         model: User,
-        attributes: ["name", "profileImage"],
+        attributes: ["name"],
+        // 유저에 소속된 이미지 찾기
+        include: {
+          model: Image,
+          attributes: ["name"],
+        },
       },
     });
 

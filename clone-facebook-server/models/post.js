@@ -36,6 +36,9 @@ module.exports = class Post extends Sequelize.Model {
   }
 
   static associate(db) {
+    // 게시글과 이미지 ( 1 : N )
+    db.Post.hasMany(db.Image, { forginKey: "postId", targetKey: "_id", onDelete: "CASCADE" });
+    
     // 게시글과 유저
     db.Post.belongsTo(db.User, { forginKey: "postId", targetKey: "_id", onDelete: "CASCADE" });
 

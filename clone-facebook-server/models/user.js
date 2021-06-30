@@ -43,16 +43,6 @@ module.exports = class User extends Sequelize.Model {
           allowNull: false,
           comment: "유저 생일",
         },
-        profileImage: {
-          type: Sequelize.STRING(50),
-          allowNull: true,
-          comment: "유저 프로필 이미지",
-        },
-        coverImage: {
-          type: Sequelize.STRING(50),
-          allowNull: true,
-          comment: "유저 커버 이미지",
-        }
       },
       {
         sequelize, // 요거안넣으면 오류남
@@ -68,6 +58,9 @@ module.exports = class User extends Sequelize.Model {
   }
 
   static associate(db) {
+    // 유저와 이미지 ( 1 : N )
+    db.User.hasMany(db.Image, { forginKey: "userId", targetKey: "_id", onDelete: "CASCADE" });
+
     // 유저와 게시글
     db.User.hasMany(db.Post, { forginKey: "postId", targetKey: "_id", onDelete: "CASCADE" });
 

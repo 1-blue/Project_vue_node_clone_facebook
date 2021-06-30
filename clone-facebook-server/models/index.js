@@ -7,6 +7,7 @@ const Post = require("./post.js");
 const Comment = require("./comment.js");
 const Recomment = require("./recomment.js");
 const Friend = require("./friend.js");
+const Image = require("./Image.js");
 
 const db = {};
 const sequelize = new Sequelize(
@@ -24,6 +25,7 @@ db.Post = Post;
 db.Comment = Comment;
 db.Recomment = Recomment;
 db.Friend = Friend;
+db.Image = Image;
 
 db.User.init(db.sequelize);
 db.Like.init(db.sequelize);
@@ -31,6 +33,7 @@ db.Post.init(db.sequelize);
 db.Comment.init(db.sequelize);
 db.Recomment.init(db.sequelize);
 db.Friend.init(db.sequelize);
+db.Image.init(db.sequelize);
 
 db.User.associate(db);
 db.Like.associate(db);
@@ -38,5 +41,6 @@ db.Post.associate(db);
 db.Comment.associate(db);
 db.Recomment.associate(db);
 db.Friend.associate(db);
+db.Image.associate(db);
 
 module.exports = db; // db객체에 sequelize, model모두 넣어두고 db를 require해서 편하게 사용

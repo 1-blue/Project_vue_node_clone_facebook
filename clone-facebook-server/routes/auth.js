@@ -3,15 +3,16 @@ const router = require("express").Router();
 const passport = require("passport");
 const bcrypt = require("bcrypt");
 const { isNotLoggedIn, isLoggedIn } = require("../middlewares/auth.js");
-const { User } = require("../models/index.js");
+const { User, Image } = require("../models/index.js");
 
 // 회원가입
 router.post("/register", isNotLoggedIn, async (req, res) => {
-  const { name, id, password, email, gender, birthday, imageFilename } = req.body;
+  const { name, id, password, email, gender, birthday, profileImage } = req.body;
 
   const hashPassword = await bcrypt.hash(password, 6);
 
   try {
+    // 유저 생성
     const response = await User.create({
       name,
       id,
@@ -19,7 +20,13 @@ router.post("/register", isNotLoggedIn, async (req, res) => {
       email,
       gender,
       birthday,
-      profileImage: imageFilename,
+    });
+
+    // 프로필 이미지 생성
+    await Image.create({
+      kinds: 0,
+      name: profileImage,
+      UserId: response._id,
     });
   
     res.json(response);
