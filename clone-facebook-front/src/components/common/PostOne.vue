@@ -38,7 +38,8 @@ export default {
       return this.post.User.name;
     },
     profileImage() {
-      return this.post.User.profileImage;
+      // 요거 왜 배열로 주고 Images인지 모르겠음 sequelize에서 뭔가 작용하는것같음
+      return this.post.User.Images[0].name;
     },
     updatedAt() {
       return this.post.updatedAt;

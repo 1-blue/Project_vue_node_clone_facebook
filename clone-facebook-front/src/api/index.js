@@ -59,8 +59,8 @@ async function uploadProfileImage(profileImage) {
 async function applyRegister(information) {
   try {
     if (information.profileImage) {
-      const { imageFilename } = await uploadProfileImage(information.profileImage);
-      information.imageFilename = imageFilename;
+      const { profileImage } = await uploadProfileImage(information.profileImage);
+      information.profileImage = profileImage;
     }
 
     const { data } = await instance.post("/auth/register", information);
@@ -135,4 +135,29 @@ async function removePost(postId) {
   }
 }
 
-export { applyRegister, authLogin, authLogout, uploadPost, fetchPost, editPost, removePost };
+// 유저와 관련된 정보 가져오기 ( 유저정보, 게시글정보, 이미지정보 )... 유저정보페이지에 사용
+async function fetchInformation() {
+  try {
+    const { data } = await instance.get("/user");
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// 프로필이미지 변경
+async function updateProfileImage(profileImage) {
+  try {
+    let formData = new FormData();
+    formData.append("profileImage", profileImage);
+
+    const { data } = await imageInstance.put("/profile", formData);
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export { applyRegister, authLogin, authLogout, uploadPost, fetchPost, editPost, removePost, fetchInformation, updateProfileImage };
