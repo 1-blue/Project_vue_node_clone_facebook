@@ -38,8 +38,13 @@ export default {
       return this.post.User.name;
     },
     profileImage() {
-      // 요거 왜 배열로 주고 Images인지 모르겠음 sequelize에서 뭔가 작용하는것같음
-      return this.post.User.Images[0].name;
+      const profileImage = this.post.User.Images.find(image => {
+        if (image.kinds === 0) {
+          return image.name;
+        }
+      });
+
+      return profileImage.name;
     },
     updatedAt() {
       return this.post.updatedAt;

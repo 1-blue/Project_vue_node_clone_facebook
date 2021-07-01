@@ -14,6 +14,9 @@ export default createStore({
 
     // 옵션버튼외 다른곳 클릭시 옵션창 닫히게 하기위해 사용할 변수
     currentClickNode: "",
+
+    // 스피너 on/off변수
+    spinner: false,
   },
   getters: {
     isLogin(state) {
@@ -59,6 +62,14 @@ export default createStore({
     LINK_APPEND(state, target) {
       target.classList.add("router__link__active__underline");
     },
+
+    // ** 스피너관련 **
+    SPINNER_ON(state) {
+      state.spinner = true;
+    },
+    SPINNER_OFF(state) {
+      state.spinner = false;
+    },
   },
   actions: {
     // 로그인 로그아웃관련
@@ -85,6 +96,14 @@ export default createStore({
     // 현재 클릭한 링크에 데코레이션 넣기
     LINK_APPEND({ commit }, target) {
       commit("LINK_APPEND", target);
+    },
+
+    // ** 스피너관련 **
+    SPINNER_ON({ commit }) {
+      commit("SPINNER_ON");
+    },
+    SPINNER_OFF({ commit }) {
+      commit("SPINNER_OFF");
     },
   },
   modules: {},

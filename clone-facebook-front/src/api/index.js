@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-catch */
 import axios from "axios";
-// import store from "@/store/index.js";
+import store from "@/store/index.js";
 
 // axios인스턴스생성
 const instance = axios.create({
@@ -16,17 +16,59 @@ const imageInstance = axios.create({
   withCredentials: true, // 이거없으면 passport의 deserializeUser()를 호출안해서 서버측에서 로그인유지가 안됨
 });
 
-// request인터셉터 설정 ( 토큰값 넘겨주기위함 )
-// instance.interceptors.request.use(
-//   config => {
-//     // 토큰값넣기
-//     config.headers.Authorization = store.state.token;
-//     return config;
-//   },
-//   error => {
-//     return Promise.reject(error);
-//   },
-// );
+// 스피너 ON
+instance.interceptors.request.use(
+  config => {
+    // 스피너 on
+    // store.dispatch("SPINNER_ON");
+    return config;
+  },
+  error => {
+    // 스피너 off
+    store.dispatch("SPINNER_OFF");
+    return Promise.reject(error);
+  },
+);
+// 스피너 OFF
+instance.interceptors.response.use(
+  function (response) {
+    // 스피너 off
+    store.dispatch("SPINNER_OFF");
+    return response;
+  },
+  function (error) {
+    // 스피너 off
+    store.dispatch("SPINNER_OFF");
+    return Promise.reject(error);
+  },
+);
+
+// 스피너 ON
+imageInstance.interceptors.request.use(
+  config => {
+    // 스피너 on
+    // store.dispatch("SPINNER_ON");
+    return config;
+  },
+  error => {
+    // 스피너 off
+    store.dispatch("SPINNER_OFF");
+    return Promise.reject(error);
+  },
+);
+// 스피너 OFF
+imageInstance.interceptors.response.use(
+  function (response) {
+    // 스피너 off
+    store.dispatch("SPINNER_OFF");
+    return response;
+  },
+  function (error) {
+    // 스피너 off
+    store.dispatch("SPINNER_OFF");
+    return Promise.reject(error);
+  },
+);
 
 // 프로필이미지 업로드
 async function uploadProfileImage(profileImage) {
@@ -42,25 +84,14 @@ async function uploadProfileImage(profileImage) {
   }
 }
 
-// 커버이미지 업로드
-// async function uploadCoverImage(coverImage) {
-//   try {
-//     let formData = new FormData();
-//     formData.append("coverImage", coverImage);
-
-//     const { data } = await imageInstance.post("/cover", formData);
-//     return data;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
-
 // 회원가입
 async function applyRegister(information) {
   try {
     if (information.profileImage) {
       const { profileImage } = await uploadProfileImage(information.profileImage);
       information.profileImage = profileImage;
+    } else {
+      information.profileImage = null;
     }
 
     const { data } = await instance.post("/auth/register", information);
@@ -160,4 +191,17 @@ async function updateProfileImage(profileImage) {
   }
 }
 
-export { applyRegister, authLogin, authLogout, uploadPost, fetchPost, editPost, removePost, fetchInformation, updateProfileImage };
+// 커버이미지 업로드
+async function updateCoverImage(coverImage) {
+  try {
+    let formData = new FormData();
+    formData.append("coverImage", coverImage);
+
+    const { data } = await imageInstance.put("/cover", formData);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export { applyRegister, authLogin, authLogout, uploadPost, fetchPost, editPost, removePost, fetchInformation, updateProfileImage, updateCoverImage };

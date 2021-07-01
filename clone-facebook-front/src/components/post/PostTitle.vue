@@ -62,7 +62,7 @@ export default {
     },
     // 이거는 임시로 사용할 것같음 실제로 배포하게 된다면 경로가 바뀌지않을까 생각함
     myProfileImage() {
-      return `http://localhost:3000/image/${this.profileImage}`;
+      return `http://localhost:3000/image/profile/${this.profileImage}`;
     },
   },
   watch: {
