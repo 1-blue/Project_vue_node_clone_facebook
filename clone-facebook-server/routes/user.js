@@ -20,12 +20,10 @@ router.get("/", isLoggedIn, async (req, res) => {
       // 해당 유저의 이미지들 가져옴
       {
         model: Image,
-        attributes: ["name"],
+        attributes: ["name", "kinds"],
       }
     ],
   });
-
-  console.log(response);
 
   res.json(response)
 });

@@ -35,7 +35,7 @@ router.get("/", isLoggedIn, async (req, res) => {
         // 유저에 소속된 이미지 찾기
         include: {
           model: Image,
-          attributes: ["name"],
+          attributes: ["name", "kinds"],
         },
       },
     });

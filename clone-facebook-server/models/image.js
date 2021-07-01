@@ -13,7 +13,7 @@ module.exports = class Image extends Sequelize.Model {
         },
         name: {
           type: Sequelize.STRING(30),
-          allowNull: false,
+          allowNull: true,
           comment: "이미지 파일명"
         },
         kinds: {

@@ -28,6 +28,13 @@ router.post("/register", isNotLoggedIn, async (req, res) => {
       name: profileImage,
       UserId: response._id,
     });
+
+    // 커버 이미지 생성
+    await Image.create({
+      kinds: 1,
+      name: null,
+      UserId: response._id,
+    });
   
     res.json(response);
   } catch (error) {
