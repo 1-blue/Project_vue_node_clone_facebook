@@ -6,6 +6,7 @@ const path = require("path");
 const session = require("express-session");
 const passport = require('passport');
 const passportConfig = require('./passport/index.js');
+const { multerConfig } = require('./multer/index.js');
 const app = express();
 
 // 포트설정
@@ -63,6 +64,9 @@ sequelize
 app.use(passport.initialize());   // passport 구동
 app.use(passport.session());      // 세션 연결
 passportConfig();
+
+// multer 기본 폴더 생성
+multerConfig();
 
 // 라우팅
 const authRouter = require("./routes/auth.js");

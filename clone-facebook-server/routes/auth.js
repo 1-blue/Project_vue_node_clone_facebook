@@ -7,7 +7,7 @@ const { User, Image } = require("../models/index.js");
 
 // 회원가입
 router.post("/register", isNotLoggedIn, async (req, res) => {
-  const { name, id, password, email, gender, birthday, profileImage } = req.body;
+  const { name, id, password, email, gender, birthday, profileImageName } = req.body;
 
   const hashPassword = await bcrypt.hash(password, 6);
 
@@ -25,7 +25,7 @@ router.post("/register", isNotLoggedIn, async (req, res) => {
     // 프로필 이미지 생성
     await Image.create({
       kinds: 0,
-      name: profileImage,
+      name: profileImageName,
       UserId: response._id,
     });
 
