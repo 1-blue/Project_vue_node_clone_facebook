@@ -173,6 +173,11 @@ export default {
             alert("서버측 에러입니다. 잠시후에 다시시도해주세요");
             break;
 
+          // 프로필이미지 업로드 에러
+          case 503:
+            alert(error.response.data.message);
+            break;
+
           default:
             break;
         }

@@ -2,13 +2,22 @@
   <section id="information__page">
     <section class="image">
       <!-- 커버이미지 -->
-      <img :src="myCoverImage" alt="커버이미지" class="cover__image" />
-      <!-- 커버이미지 변경버튼 -->
-      <label for="cover__image" class="cover__image__label shadow">
-        <i class="fas fa-camera"></i>
-        커버이미지 변경
-      </label>
-      <input type="file" name="coverImage" accept="image/*" id="cover__image" ref="coverImage" @change="changeCoverImage" />
+      <div class="container__cover__image">
+        <img :src="myCoverImage" alt="커버이미지" class="cover__image" @click="isShowCoverImageChangeForm = !isShowCoverImageChangeForm" ref="coverImageButton" v-if="myCoverImage" />
+        <div class="cover__image" @click="isShowCoverImageChangeForm = !isShowCoverImageChangeForm" ref="coverImageButton" v-else></div>
+
+        <!-- 커버이미지 수정 form -->
+        <form-image-change class="cover__image__change__form" v-show="isShowCoverImageChangeForm" :kinds="IMAGE.COVER_IMAGE" @fetch:user="fetchUser">
+          <template v-slot:change>
+            <i class="fas fa-camera"></i>
+            커버이미지변경
+          </template>
+          <template v-slot:remove>
+            <i class="fas fa-eraser"></i>
+            커버이미지제거
+          </template>
+        </form-image-change>
+      </div>
 
       <!-- 프로필이미지 -->
       <div class="container__profile__image">
@@ -16,13 +25,27 @@
           :src="myProfileImage"
           alt="프로필이미지"
           class="profile__image shadow"
-          v-if="profileImage"
           @click="isShowProfileImageChangeForm = !isShowProfileImageChangeForm"
           ref="profileImageButton"
+          v-if="profileImage"
         />
-        <img src="@/assets/user-default.png" alt="프로필이미지" class="profile__image shadow" v-else @click="isShowProfileImageChangeForm = !isShowProfileImageChangeForm" ref="profileImageButton" />
+        <img src="@/assets/user-default.png" alt="프로필이미지" class="profile__image shadow" @click="isShowProfileImageChangeForm = !isShowProfileImageChangeForm" ref="profileImageButton" v-else />
+
         <!-- 프로필이미지 수정 form -->
-        <form-image-change class="profile__image__change__form" v-show="isShowProfileImageChangeForm" @fetch:user="fetchUser"></form-image-change>
+        <form-image-change class="profile__image__change__form" v-show="isShowProfileImageChangeForm" :kinds="IMAGE.PROFILE_IMAGE" @fetch:user="fetchUser">
+          <template v-slot:change>
+            <i class="fas fa-camera"></i>
+            프로필사진변경
+          </template>
+          <template v-slot:remove>
+            <i class="fas fa-eraser"></i>
+            프로필이미지제거
+          </template>
+          <template v-slot:appendFrame>
+            <i class="fas fa-image"></i>
+            프레임추가 ( 기능없음 )
+          </template>
+        </form-image-change>
       </div>
 
       <!-- 이름 -->
@@ -35,7 +58,7 @@
 </template>
 
 <script>
-import { fetchInformation, updateCoverImage } from "@/api/index.js";
+import { fetchInformation } from "@/api/index.js";
 import FormImageChange from "@/components/form/FormImageChange.vue";
 
 export default {
@@ -47,38 +70,12 @@ export default {
     return {
       data: null,
       isShowProfileImageChangeForm: false,
+      isShowCoverImageChangeForm: false,
     };
   },
   computed: {
-    // eslint-disable-next-line vue/return-in-computed-property
-    profileImage() {
-      if (!this.data) return;
-      if (this.data.Images.length === 0) return;
-      const profileImage = this.data.Images.find(image => {
-        if (image.kinds === 0) {
-          return image.name;
-        }
-      });
-
-      return profileImage.name;
-    },
-    myProfileImage() {
-      return `http://localhost:3000/image/profile/${this.profileImage}`;
-    },
-    // eslint-disable-next-line vue/return-in-computed-property
-    coverImage() {
-      if (!this.data) return;
-      if (this.data.Images.length === 0) return;
-      const coverImage = this.data.Images.find(image => {
-        if (image.kinds === 1) {
-          return image.name;
-        }
-      });
-
-      return coverImage.name;
-    },
-    myCoverImage() {
-      return `http://localhost:3000/image/cover/${this.coverImage}`;
+    IMAGE() {
+      return this.$filter.IMAGE;
     },
     name() {
       if (!this.data) return;
@@ -87,37 +84,58 @@ export default {
     currentClickNode() {
       return this.$store.state.currentClickNode;
     },
+    profileImage() {
+      if (!this.data) return;
+      if (this.data.Images.length === 0) return;
+      const profileImage = this.data.Images.find(image => {
+        if (image.kinds === this.IMAGE.PROFILE_IMAGE) {
+          return image.name;
+        }
+      });
+
+      return profileImage ? profileImage.name : null;
+    },
+    myProfileImage() {
+      return this.profileImage ? `http://localhost:3000/image/profile/${this.profileImage}` : null;
+    },
+    coverImage() {
+      if (!this.data) return;
+      if (this.data.Images.length === 0) return;
+      const coverImage = this.data.Images.find(image => {
+        if (image.kinds === this.$filter.IMAGE.COVER_IMAGE) {
+          return image.name;
+        }
+      });
+
+      return coverImage ? coverImage.name : null;
+    },
+    myCoverImage() {
+      return this.coverImage ? `http://localhost:3000/image/cover/${this.coverImage}` : null;
+    },
   },
   watch: {
     currentClickNode(value) {
-      if (value === this.$refs.profileImageButton) return;
-      this.isShowProfileImageChangeForm = false;
+      // 프로필이미지외 다른거 클릭시 form 닫기
+      if (value !== this.$refs.profileImageButton) {
+        this.isShowProfileImageChangeForm = false;
+      }
+
+      // 커버이미지외 다른거 클릭시 form 닫기
+      if (value !== this.$refs.coverImageButton) {
+        this.isShowCoverImageChangeForm = false;
+      }
     },
   },
-  created() {
-    this.fetchUser();
+  async created() {
+    await this.fetchUser();
   },
   methods: {
     async fetchUser() {
-      this.data = await fetchInformation();
-    },
-    async changeCoverImage() {
       try {
-        // 커버이미지 변경
-        await updateCoverImage(this.$refs.coverImage.files[0]);
-
-        // 새로 업로드받기
-        this.fetchUser();
+        this.data = await fetchInformation();
+        return;
       } catch (error) {
-        switch (error.response.status) {
-          case 400:
-            alert("FormImageChange.vue 400에러 >> ", error);
-            break;
-
-          default:
-            alert("FormImageChange.vue 알 수 없는 에러>> ", error);
-            break;
-        }
+        console.log("error >> ", error);
       }
     },
   },
@@ -129,7 +147,7 @@ export default {
   display: flex;
   flex-direction: column;
 }
-
+/* 이미지관련 */
 .image {
   display: flex;
   flex-direction: column;
@@ -137,27 +155,30 @@ export default {
   height: 70vh;
   background: white;
 }
-.cover__image {
+
+/* 커버이미지 */
+.container__cover__image {
+  position: relative;
   background: var(--light-gray-color);
   width: 70%;
   min-height: 70%;
   border-radius: 0 0 1rem 1rem;
-}
-#cover__image {
-  display: none;
-}
-.cover__image__label {
-  position: relative;
-  bottom: 8%;
-  left: 25%;
-  background: white;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
+  box-shadow: 0 0 10px grey;
   cursor: pointer;
 }
-.cover__image__label:hover {
-  background: rgb(226, 226, 226);
+.cover__image {
+  width: 100%;
+  height: 100%;
+  border-radius: 0 0 1rem 1rem;
 }
+.cover__image__change__form {
+  position: absolute;
+  bottom: -40%;
+  right: 0;
+  z-index: 9999;
+}
+
+/* 프로필이미지 */
 .container__profile__image {
   position: relative;
   top: -30%;
@@ -175,11 +196,12 @@ export default {
 }
 .profile__image__change__form {
   position: absolute;
-  bottom: -60%;
+  bottom: -100%;
   left: 0;
   transform: translateX(-25%);
   z-index: 9999;
 }
+
 .name {
   position: relative;
   top: -30%;
@@ -197,5 +219,10 @@ export default {
 .navigation {
   height: 10vh;
   background: white;
+}
+
+.fas {
+  font-size: 1.2rem;
+  padding-right: 0.4rem;
 }
 </style>

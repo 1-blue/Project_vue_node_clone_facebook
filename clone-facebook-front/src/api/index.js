@@ -88,10 +88,10 @@ async function uploadProfileImage(profileImage) {
 async function applyRegister(information) {
   try {
     if (information.profileImage) {
-      const { profileImage } = await uploadProfileImage(information.profileImage);
-      information.profileImage = profileImage;
+      const { profileImageName } = await uploadProfileImage(information.profileImage);
+      information.profileImageName = profileImageName;
     } else {
-      information.profileImage = null;
+      information.profileImageName = null;
     }
 
     const { data } = await instance.post("/auth/register", information);
@@ -191,6 +191,17 @@ async function updateProfileImage(profileImage) {
   }
 }
 
+// 프로필이미지 제거
+async function removeProfileImage() {
+  try {
+    const { data } = await imageInstance.delete("/profile");
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 // 커버이미지 업로드
 async function updateCoverImage(coverImage) {
   try {
@@ -204,4 +215,15 @@ async function updateCoverImage(coverImage) {
   }
 }
 
-export { applyRegister, authLogin, authLogout, uploadPost, fetchPost, editPost, removePost, fetchInformation, updateProfileImage, updateCoverImage };
+// 커버이미지 제거
+async function removeCoverImage() {
+  try {
+    const { data } = await imageInstance.delete("/cover");
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export { applyRegister, authLogin, authLogout, uploadPost, fetchPost, editPost, removePost, fetchInformation, updateProfileImage, removeProfileImage, updateCoverImage, removeCoverImage };

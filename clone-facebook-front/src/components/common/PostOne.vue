@@ -39,12 +39,12 @@ export default {
     },
     profileImage() {
       const profileImage = this.post.User.Images.find(image => {
-        if (image.kinds === 0) {
+        if (image.kinds === this.$filter.IMAGE.PROFILE_IMAGE) {
           return image.name;
         }
       });
 
-      return profileImage.name;
+      return profileImage ? profileImage.name : null;
     },
     updatedAt() {
       return this.post.updatedAt;

@@ -1,36 +1,113 @@
 <template>
   <form @submit.prevent class="form__image__change">
-    <label for="profile__image" class="profile__image">
-      <i class="fas fa-camera"></i>
-      프로필사진변경
+    <label :for="imageKinds" class="image">
+      <slot name="change"></slot>
     </label>
-    <input type="file" name="profileImage" accept="image/*" id="profile__image" ref="profileImage" @change="changeProfileImage" />
+    <input type="file" name="image" accept="image/*" :id="imageKinds" ref="image" @change="changeImage" />
 
-    <label for="profile__frame" class="profile__frame">
-      <i class="fas fa-image"></i>
-      프레임추가 ( X )
+    <label for="" class="image__remove" @click="deleteImage">
+      <slot name="remove"></slot>
     </label>
-    <input type="file" name="profileframe" accept="image/*" id="profile__frame" ref="profileFrame" />
+
+    <template v-if="kinds === $filter.IMAGE.PROFILE_IMAGE">
+      <label for="frame" class="frame">
+        <slot name="appendFrame"></slot>
+      </label>
+      <input type="file" name="profileframe" accept="image/*" id="frame" ref="profileFrame" />
+    </template>
   </form>
 </template>
 
 <script>
-import { updateProfileImage } from "@/api/index.js";
+import { updateProfileImage, removeProfileImage, updateCoverImage, removeCoverImage } from "@/api/index.js";
 
 export default {
   name: "FormImageChange",
+  props: {
+    kinds: {
+      type: Number,
+      required: true,
+    },
+  },
+  computed: {
+    // label의 for과 input의 id가 profile이랑 cover랑 같아서 이미지 변경에 오류가 생겨서 서로 다른 이름을 가지게 하기위해 사용
+    imageKinds() {
+      switch (this.kinds) {
+        case this.$filter.IMAGE.PROFILE_IMAGE:
+          return "profileImage";
+
+        case this.$filter.IMAGE.COVER_IMAGE:
+          return "coverImage";
+
+        default:
+          return "image";
+      }
+    },
+  },
   methods: {
-    async changeProfileImage() {
+    async changeImage() {
       try {
-        // 프로필이미지 변경
-        await updateProfileImage(this.$refs.profileImage.files[0]);
+        switch (this.kinds) {
+          // 프로필이미지 변경
+          case this.$filter.IMAGE.PROFILE_IMAGE:
+            await updateProfileImage(this.$refs.image.files[0]);
+            break;
+
+          // 커버 이미지 변경
+          case this.$filter.IMAGE.COVER_IMAGE:
+            await updateCoverImage(this.$refs.image.files[0]);
+            break;
+        }
 
         // 데이터 다시받기
         this.$emit("fetch:user");
       } catch (error) {
         switch (error.response.status) {
-          case 400:
-            alert("FormImageChange.vue 400에러 >> ", error);
+          // DB에 저장된 이미지명 변경 실패
+          case 500:
+            alert(error.response.data.message);
+            break;
+
+          // 이미지 저장 실패
+          case 503:
+            alert(error.response.data.message);
+            break;
+
+          default:
+            alert("FormImageChange.vue 알 수 없는 에러>> ", error);
+            break;
+        }
+      }
+    },
+    async deleteImage() {
+      try {
+        switch (this.kinds) {
+          // 프로필이미지 제거
+          case this.$filter.IMAGE.PROFILE_IMAGE:
+            await removeProfileImage();
+            break;
+
+          // 커버 이미지 변경
+          case this.$filter.IMAGE.COVER_IMAGE:
+            await removeCoverImage();
+            break;
+
+          default:
+            break;
+        }
+
+        // 데이터 다시받기
+        this.$emit("fetch:user");
+      } catch (error) {
+        switch (error.response.status) {
+          // DB에 저장된 이미지명 변경 실패
+          case 500:
+            alert(error.response.data.message);
+            break;
+
+          // 이미지 저장 실패
+          case 503:
+            alert(error.response.data.message);
             break;
 
           default:
@@ -49,17 +126,16 @@ export default {
   flex-direction: column;
   background: white;
   padding: 0.5rem 0.2rem;
-  width: 300px;
-  height: 12vh;
   border-radius: 0.5rem;
   box-shadow: 0 0 15px grey;
+  min-width: 300px;
 }
-#profile__image,
-#profile__frame {
+input[type="file"] {
   display: none;
 }
-.profile__image,
-.profile__frame {
+.image,
+.frame,
+.image__remove {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,13 +144,11 @@ export default {
   cursor: pointer;
   text-align: start;
   vertical-align: middle;
+  padding: 0.8rem 1.4rem;
 }
-.profile__image:hover,
-.profile__frame:hover {
+.image:hover,
+.frame:hover,
+.image__remove:hover {
   background: var(--gray-color);
-}
-.fas {
-  font-size: 1.2rem;
-  padding-right: 0.4rem;
 }
 </style>
