@@ -1,7 +1,10 @@
 <template>
   <li class="post shadow">
     <post-title :username="username" :profileImage="profileImage" :updatedAt="updatedAt" :postId="post._id" @show:editForm="isShowEditForm = !isShowEditForm"></post-title>
+    <hr />
     <post-contents :contents="contents"></post-contents>
+    <hr />
+    <post-footers :postId="postId" :like="like" @fetch:postList="$emit('fetch:postList')"></post-footers>
 
     <!-- 게시글 수정 폼 -->
     <template v-if="isShowEditForm">
@@ -13,6 +16,7 @@
 <script>
 import PostTitle from "@/components/post/PostTitle.vue";
 import PostContents from "@/components/post/PostContents.vue";
+import PostFooters from "@/components/post/PostFooters.vue";
 import FormEditPost from "@/components/form/FormEditPost.vue";
 
 export default {
@@ -20,6 +24,7 @@ export default {
   components: {
     PostTitle,
     PostContents,
+    PostFooters,
     FormEditPost,
   },
   props: {
@@ -51,6 +56,12 @@ export default {
     },
     contents() {
       return this.post.contents;
+    },
+    postId() {
+      return this.post._id;
+    },
+    like() {
+      return this.post.Likes;
     },
   },
 };

@@ -4,7 +4,7 @@
     <h1>여러 링크들</h1>
 
     <!-- 메인페이지 중간영역 -->
-    <section-post :postList="postList"></section-post>
+    <section-post :postList="postList" @fetch:postList="fetchPostList"></section-post>
 
     <!-- 메인페이지 우측영역 -->
     <h1>친구관련정보들</h1>

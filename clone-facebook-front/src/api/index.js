@@ -226,4 +226,45 @@ async function removeCoverImage() {
   }
 }
 
-export { applyRegister, authLogin, authLogout, uploadPost, fetchPost, editPost, removePost, fetchInformation, updateProfileImage, removeProfileImage, updateCoverImage, removeCoverImage };
+// 좋아요 추가
+async function appendLike(PostId) {
+  try {
+    const { data } = await instance.post("/like", {
+      PostId,
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// 좋아요 제거
+async function removeLike(likeId) {
+  try {
+    const { data } = await instance.delete("/like", {
+      params: {
+        likeId,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export {
+  applyRegister,
+  authLogin,
+  authLogout,
+  uploadPost,
+  fetchPost,
+  editPost,
+  removePost,
+  fetchInformation,
+  updateProfileImage,
+  removeProfileImage,
+  updateCoverImage,
+  removeCoverImage,
+  appendLike,
+  removeLike,
+};
