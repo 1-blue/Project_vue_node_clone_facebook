@@ -73,11 +73,13 @@ const authRouter = require("./routes/auth.js");
 const postRouter = require("./routes/post.js");
 const imageRouter = require("./routes/image.js");
 const userRouter = require("./routes/user.js");
+const likeRouter = require("./routes/like.js");
 
 app.use("/auth", authRouter);
 app.use("/post", postRouter);
 app.use("/image", imageRouter);
 app.use("/user", userRouter);
+app.use("/like", likeRouter);
 
 app.listen(app.get("port"), () => {
   console.log(`${app.get("port")}번 대기중`);

@@ -31,12 +31,13 @@ DB에 users.profileImage컬럼에 image이름만 저장함 ( 이미지이름은 
 user.profileImage컬럼값을 이용해서 클라이언트에서 서버에서 express.static으로 열어둔 uploads폴더에서 바로 들고와서 사용하는데
 첫 번째의문은 이런 방식이 괜찮은지
 ```
+3. `position: absolute;` 일 때 자식영역의 크기만큼 `height`가지는 방법이나 태그가 영역을 차지하지않고 원하는 곳에 배치하는 방법있는지? ( by likeList )
 
 ## 해야할것
 1. 스크롤 내릴 때 마다 포스트정보 5 ~ 10개씩 불러오기
-
 2. 게시글에 이미지넣는 기능 추가
 3. vuex영역별로 나누기 ( spinner, currentClickNode, currentLink )
+
 4. 댓글기능 추가
 5. 2~4하고나면 내 정보페이지 이어서 정리
 

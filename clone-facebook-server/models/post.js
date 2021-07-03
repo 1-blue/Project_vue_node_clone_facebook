@@ -43,7 +43,7 @@ module.exports = class Post extends Sequelize.Model {
     db.Post.belongsTo(db.User, { forginKey: "postId", targetKey: "_id", onDelete: "CASCADE" });
 
     // 게시글과 좋아요 ( 1 : 1 )
-    db.Post.hasOne(db.Like, { forginKey: "postId", targetKey: "_id", onDelete: "CASCADE" });
+    db.Post.hasMany(db.Like, { forginKey: "postId", targetKey: "_id", onDelete: "CASCADE" });
 
     // 포스트와 댓글 ( 1 : N )
     db.Post.hasMany(db.Comment, { forginKey: "postId", targetKey: "_id", onDelete: "CASCADE" });
