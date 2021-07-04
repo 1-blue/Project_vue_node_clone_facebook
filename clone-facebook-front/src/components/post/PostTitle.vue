@@ -1,9 +1,6 @@
 <template>
   <div class="post__title">
-    <!-- 포스트의 유저 이미지 -->
-    <img :src="myProfileImage" alt="기본이미지" class="user__image shadow" v-if="profileImage" />
-    <!-- 포스트의 유저 기본 이미지 -->
-    <img src="@/assets/user-default.png" alt="기본이미지" class="user__image shadow" v-else />
+    <profile-image :profileImage="profileImage" :size="40"></profile-image>
 
     <!--  포스트의 유저 및 포스트 업로드시간 -->
     <div class="wrapper__post__info">
@@ -19,11 +16,13 @@
 </template>
 
 <script>
+import ProfileImage from "@/components/common/ProfileImage.vue";
 import FormPostOption from "@/components/form/FormPostOption.vue";
 
 export default {
   name: "PostTitle",
   components: {
+    ProfileImage,
     FormPostOption,
   },
   props: {
@@ -60,10 +59,6 @@ export default {
     postOptionButton() {
       return this.$refs.postOptionButton;
     },
-    // 이거는 임시로 사용할 것같음 실제로 배포하게 된다면 경로가 바뀌지않을까 생각함
-    myProfileImage() {
-      return `http://localhost:3000/image/profile/${this.profileImage}`;
-    },
   },
   watch: {
     // 옵션창외 다른 곳을 클릭하면 옵션창 닫기
@@ -84,17 +79,6 @@ export default {
   display: flex;
   justify-content: space-between;
   padding: 1rem 1rem 0;
-}
-.user__image {
-  border-radius: 100%;
-  width: 40px;
-  height: 40px;
-  opacity: 0.8;
-  transition: all 0.5s;
-  cursor: pointer;
-}
-.user__image:hover {
-  opacity: 1;
 }
 .wrapper__post__info {
   position: relative;

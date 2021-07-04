@@ -1,8 +1,6 @@
 <template>
   <section id="post__contents">
-    <pre class="contents">
-      {{ contents }}
-    </pre>
+    <pre>{{ contents }}</pre>
   </section>
 </template>
 
@@ -21,9 +19,5 @@ export default {
 <style scoped>
 #post__contents {
   padding: 0 1rem;
-}
-
-.contents {
-  white-space: pre-line;
 }
 </style>

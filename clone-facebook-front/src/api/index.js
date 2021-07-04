@@ -252,6 +252,16 @@ async function removeLike(likeId) {
   }
 }
 
+// 댓글 업로드
+async function uploadComments(PostId, contents) {
+  try {
+    const { data } = await instance.post("/comments", { PostId, contents });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export {
   applyRegister,
   authLogin,
@@ -267,4 +277,5 @@ export {
   removeCoverImage,
   appendLike,
   removeLike,
+  uploadComments,
 };

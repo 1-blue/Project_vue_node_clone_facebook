@@ -4,7 +4,7 @@
     <hr />
     <post-contents :contents="contents"></post-contents>
     <hr />
-    <post-footers :postId="postId" :like="like" @fetch:postList="$emit('fetch:postList')"></post-footers>
+    <post-footers :postId="postId" :like="like" :comments="comments" :profileImage="profileImage" @fetch:postList="$emit('fetch:postList')"></post-footers>
 
     <!-- 게시글 수정 폼 -->
     <template v-if="isShowEditForm">
@@ -62,6 +62,9 @@ export default {
     },
     like() {
       return this.post.Likes;
+    },
+    comments() {
+      return this.post.Comments;
     },
   },
 };

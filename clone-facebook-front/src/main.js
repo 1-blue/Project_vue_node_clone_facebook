@@ -8,6 +8,13 @@ import mitt from "mitt";
 
 const app = createApp(App);
 
+// 사용자 지정 디렉티브
+// app.directive("focus", {
+//   mounted(el) {
+//     el.focus();
+//   },
+// });
+
 // 전역변수
 app.config.globalProperties.$filter = {
   validateEmail,

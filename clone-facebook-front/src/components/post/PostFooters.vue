@@ -12,8 +12,8 @@
           </li>
         </ul>
       </li>
-      <li class="comments">
-        <span>댓글 x개</span>
+      <li class="comments" @click="isShowComments = !isShowComments">
+        <span>댓글 {{ commentsNumber }}개</span>
       </li>
     </ul>
 
@@ -26,7 +26,7 @@
         <span v-if="isLike">좋아요 취소</span>
         <span v-else>좋아요</span>
       </li>
-      <li>
+      <li @click="isShowComments = true">
         <i class="far fa-comment-alt"></i>
         <span>댓글달기</span>
       </li>
@@ -35,14 +35,22 @@
         <span>공유하기</span>
       </li>
     </ul>
+
+    <hr />
+
+    <post-comments :postId="postId" :comments="comments" :profileImage="profileImage" v-show="isShowComments"></post-comments>
   </section>
 </template>
 
 <script>
 import { appendLike, removeLike } from "@/api/index.js";
+import PostComments from "@/components/post/PostComments.vue";
 
 export default {
   name: "PostFooters",
+  components: {
+    PostComments,
+  },
   props: {
     postId: {
       type: Number,
@@ -52,10 +60,20 @@ export default {
       type: Object,
       required: true,
     },
+    comments: {
+      type: Object,
+      required: true,
+    },
+    profileImage: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
       isShowLikeList: false,
+      isShowComments: false,
+      isFocus: false,
     };
   },
   computed: {
@@ -73,6 +91,9 @@ export default {
       });
 
       return temp ? temp : false;
+    },
+    commentsNumber() {
+      return this.comments.length;
     },
   },
   methods: {
@@ -168,5 +189,9 @@ export default {
 /* 댓글 x개 */
 .comments {
   font-size: 0.9rem;
+  cursor: pointer;
+}
+.comments:hover {
+  text-decoration: underline;
 }
 </style>
