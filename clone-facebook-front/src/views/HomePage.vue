@@ -25,6 +25,8 @@ export default {
   data() {
     return {
       postList: [],
+      fetchPostNumber: 5,
+      fetchCommentsNumber: 5,
     };
   },
   created() {
@@ -32,13 +34,22 @@ export default {
     this.fetchPostList();
   },
   mounted() {
-    // 포스트 정보를 새로 고침해야 할 때
+    // 게시글 정보를 새로 고침해야 할 때
     this.$filter.emitter.on("fetch:postList", this.fetchPostList);
+
+    // 게시글 추가로 패치
+    this.$filter.emitter.on("fetch:appendPost", this.fetchAppendPost);
+
+    // 게시글의 댓글 추가로 패치
+    this.$filter.emitter.on("fetch:appendComments", this.fetchAppendComments);
+
+    // 게시글의 댓글 패치개수 초기화
+    this.$filter.emitter.on("fetch:resetComments", this.fetchResetComments);
   },
   methods: {
     async fetchPostList() {
       try {
-        const { response } = await fetchPost();
+        const { response } = await fetchPost(this.fetchPostNumber, this.fetchCommentsNumber);
         this.postList = response;
       } catch (error) {
         if (error.response) {
@@ -51,6 +62,22 @@ export default {
           console.error("HomePage.vue >> ", error);
         }
       }
+    },
+    // 게시글 추가로 패치하기
+    fetchAppendPost() {
+      this.fetchPostNumber += 5;
+      this.fetchPostList();
+    },
+    // 댓글 추가로 패치하기
+    fetchAppendComments() {
+      this.fetchCommentsNumber += 5;
+      this.fetchPostList();
+    },
+    // 이거 최적화 필요함
+    // 댓글 원래대로 돌리기
+    fetchResetComments() {
+      this.fetchCommentsNumber = 5;
+      this.fetchPostList();
     },
   },
 };

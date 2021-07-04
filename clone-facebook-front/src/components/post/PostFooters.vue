@@ -12,8 +12,8 @@
           </li>
         </ul>
       </li>
-      <li class="comments" @click="isShowComments = !isShowComments">
-        <span>댓글 {{ commentsNumber }}개</span>
+      <li class="comments" @click="clickShowComments">
+        <span>댓글 {{ commentCount }}개</span>
       </li>
     </ul>
 
@@ -26,7 +26,7 @@
         <span v-if="isLike">좋아요 취소</span>
         <span v-else>좋아요</span>
       </li>
-      <li @click="isShowComments = true">
+      <li @click="clickAddComments">
         <i class="far fa-comment-alt"></i>
         <span>댓글달기</span>
       </li>
@@ -38,12 +38,12 @@
 
     <hr />
 
-    <post-comments :postId="postId" :comments="comments" :profileImage="profileImage" v-show="isShowComments"></post-comments>
+    <post-comments :postId="postId" :comments="comments" :profileImage="profileImage" v-if="isShowComments" :isFocus="isFocus" :commentCount="commentCount"></post-comments>
   </section>
 </template>
 
 <script>
-import { appendLike, removeLike } from "@/api/index.js";
+import { appendLike, removeLike, getCommentsCount } from "@/api/index.js";
 import PostComments from "@/components/post/PostComments.vue";
 
 export default {
@@ -74,6 +74,7 @@ export default {
       isShowLikeList: false,
       isShowComments: false,
       isFocus: false,
+      commentCount: 0,
     };
   },
   computed: {
@@ -92,11 +93,23 @@ export default {
 
       return temp ? temp : false;
     },
-    commentsNumber() {
-      return this.comments.length;
-    },
+  },
+  async created() {
+    // 총댓글 개수 가져오기
+    const response = await getCommentsCount(this.postId);
+    this.commentCount = response.Comments[0] ? response.Comments[0].commentCount : 0;
   },
   methods: {
+    clickShowComments() {
+      this.isShowComments = !this.isShowComments;
+      this.isFocus = false;
+      this.$filter.emitter.emit("fetch:resetComments");
+    },
+    clickAddComments() {
+      this.isShowComments = true;
+      this.isFocus = true;
+      this.$filter.emitter.emit("fetch:resetComments");
+    },
     async clickLike() {
       try {
         if (this.isLike) {

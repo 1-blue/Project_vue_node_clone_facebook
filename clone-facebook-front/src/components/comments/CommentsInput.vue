@@ -2,7 +2,16 @@
   <section id="comments__input">
     <profile-image :profileImage="profileImage"></profile-image>
     <form class="form__comments" @submit.prevent>
-      <textarea type="text" placeholder="댓글을 입력하세요..." class="textarea__comments" rows="1" @keyup="resize" @keydown.shift.enter="notThing" @keydown.enter.exact.prevent="inputComments" />
+      <textarea
+        type="text"
+        placeholder="댓글을 입력하세요..."
+        class="textarea__comments"
+        rows="1"
+        @keyup="resize"
+        @keydown.shift.enter="notThing"
+        @keydown.enter.exact.prevent="inputComments"
+        v-focus="isFocus"
+      />
     </form>
   </section>
 </template>
@@ -23,6 +32,10 @@ export default {
     },
     profileImage: {
       type: String,
+      required: true,
+    },
+    isFocus: {
+      type: Boolean,
       required: true,
     },
   },

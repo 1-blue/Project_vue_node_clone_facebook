@@ -1,44 +1,62 @@
 <template>
-  <ul id="comments__show">
-    <li v-for="comment in comments" :key="comment._id" class="comments__list">
-      <profile-image :profileImage="comment.User.Images[0].name"></profile-image>
-      <pre class="comments">
-        <strong>{{ comment.User.name }}</strong>
-        {{ comment.contents }} 
+  <li class="comments__list">
+    <!-- 댓글쓴 유저의 프로필 이미지 -->
+    <profile-image :profileImage="profileImage"></profile-image>
+
+    <!-- 댓글 -->
+    <div class="comments">
+      <!-- 댓글내용 -->
+      <pre class="comments__contents">
+        <strong>{{ username }}</strong>
+        {{ contents }}
       </pre>
-    </li>
-  </ul>
+      <!-- 댓글밑에 추가정보 및 기능 -->
+      <comments-footer :createdAt="createdAt"></comments-footer>
+    </div>
+  </li>
 </template>
 
 <script>
 import ProfileImage from "@/components/common/ProfileImage.vue";
+import CommentsFooter from "@/components/comments/CommentsFooter.vue";
 
 export default {
   name: "CommentsShow",
   components: {
     ProfileImage,
+    CommentsFooter,
   },
   props: {
-    comments: {
+    comment: {
       type: Object,
       required: true,
+    },
+  },
+  computed: {
+    profileImage() {
+      return this.comment.User.Images[0].name;
+    },
+    username() {
+      return this.comment.User.name;
+    },
+    contents() {
+      return this.comment.contents;
+    },
+    createdAt() {
+      return this.comment.createdAt;
     },
   },
 };
 </script>
 
 <style scoped>
-#comments__show {
-  display: flex;
-  flex-direction: column;
-}
-
 .comments__list {
   display: flex;
   margin-bottom: 1rem;
 }
 
-.comments {
+.comments__contents {
+  display: inline-block;
   margin: 0;
   background: var(--light-gray-color);
   padding: 0.5rem;

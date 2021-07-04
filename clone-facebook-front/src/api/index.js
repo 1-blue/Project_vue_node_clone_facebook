@@ -132,9 +132,14 @@ async function uploadPost(information) {
 }
 
 // 현재 유저에게 보여줄 게시글 가져오기 ( 일단은 모든 게시글중에 10개씩 끊어서 가져오는걸로 )
-async function fetchPost(pageNumber) {
+async function fetchPost(fetchPostNumber, fetchCommentsNumber) {
   try {
-    const { data } = await instance.get("/post", pageNumber);
+    const { data } = await instance.get("/post", {
+      params: {
+        fetchPostNumber,
+        fetchCommentsNumber,
+      },
+    });
     return data;
   } catch (error) {
     throw error;
@@ -262,6 +267,30 @@ async function uploadComments(PostId, contents) {
   }
 }
 
+// 게시글의 댓글개수 가져오기
+async function getCommentsCount(PostId) {
+  try {
+    const { data } = await instance.get("/comments/count", {
+      params: {
+        PostId,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// 게시글의 개수 가져오기
+async function getPostCount() {
+  try {
+    const { data } = await instance.get("/post/count");
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export {
   applyRegister,
   authLogin,
@@ -278,4 +307,6 @@ export {
   appendLike,
   removeLike,
   uploadComments,
+  getCommentsCount,
+  getPostCount,
 };
