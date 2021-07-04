@@ -1,7 +1,7 @@
 require("dotenv").config();
 const router = require("express").Router();
 const { isLoggedIn } = require("../middlewares/auth.js");
-const { User, Post, Image, Like } = require("../models/index.js");
+const { User, Post, Image, Like, Comment } = require("../models/index.js");
 
 // 포스트 업로드
 router.post("/", isLoggedIn, async (req, res) => {
@@ -28,24 +28,43 @@ router.get("/", isLoggedIn, async (req, res) => {
   try {
     // 게시글 찾기
     const response = await Post.findAll({
-      // 게시글에 포함된 이미지
       include: [
         {
+          // 게시글의 유저
           model: User,
           attributes: ["name"],
-          // 유저에 소속된 이미지 찾기
           include: {
+            // 게시글의 유저의 프로필이미지
             model: Image,
-            attributes: ["name", "kinds"],
+            attributes: ["name", "kinds"],        // =============================== 이거확인 =========================
           },
         },
         {
+          // 게시글의 좋아요
           model: Like,
           include: {
+            // 게시글의 좋아요를 누른 유저
             model: User,
             attributes: ["name"],
           },
         },
+        {
+          // 게시글의 댓글
+          model: Comment,
+          include: {
+            // 게시글의 댓글을 쓴 유저
+            model: User,
+            attributes: ["name"],
+            include: {
+              // 게시글의 댓글을 쓴 유저의 프로필이미지
+              model: Image,
+              attributes: ["name"],
+              where: {
+                kinds: 0,
+              },
+            },
+          },
+        }
       ]
     });
 
