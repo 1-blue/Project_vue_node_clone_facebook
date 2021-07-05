@@ -20,8 +20,8 @@ app.use(express.urlencoded({ extended: false }));
 
 // cors처리
 const corsOptions = {
-  origin: "http://localhost:8080",    // 프론트측의 url
-  credentials: true                   // 정확하게 뭔지모르겠음
+  origin: process.env.CORS_LOCAL_URL,   // 프론트측의 url  ( process.env.CORS_HOME_SERVER )
+  credentials: true                     // 정확하게 뭔지모르겠음
 }
 app.use(cors(corsOptions));
 

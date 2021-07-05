@@ -42,4 +42,35 @@ router.get("/count", isLoggedIn, async (req, res) => {
   }
 });
 
+// 댓글 삭제
+router.delete("/", isLoggedIn, async (req, res) => {
+  // 댓글 아이디 받기
+  const { commentsId } = req.query;
+
+  try {
+    // 댓글 삭제
+    await Comment.destroy({ where: { _id: commentsId } });
+
+    return res.json({ message: "delete success" });
+  } catch (error) {
+    return res.status(503).json({ message: "서버측 에러입니다. by delete => /comments", error });
+  }
+});
+
+// 댓글 수정
+router.put("/", isLoggedIn, async (req, res) => {
+  const { commentsId, contents } = req.body;
+
+  try {
+    // 댓글찾기
+    const comments = await Comment.findOne({ where: { _id: commentsId } });
+    // 댓글 삭제
+    await comments.update({ contents });
+
+    return res.json({ message: "edit success" });
+  } catch (error) {
+    return res.status(503).json({ message: "서버측 에러입니다. by put => /comments", error });
+  }
+});
+
 module.exports = router;
