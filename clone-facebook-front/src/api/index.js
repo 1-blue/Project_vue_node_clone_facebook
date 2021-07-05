@@ -4,13 +4,13 @@ import store from "@/store/index.js";
 
 // axios인스턴스생성
 const instance = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: `${process.env.VUE_APP_LOCAL_URL}`,
   timeout: 1000,
   withCredentials: true, // 이거없으면 passport의 deserializeUser()를 호출안해서 서버측에서 로그인유지가 안됨
 });
 
 const imageInstance = axios.create({
-  baseURL: "http://localhost:3000/image",
+  baseURL: `${process.env.VUE_APP_LOCAL_URL}/image`,
   header: { "content-type": "multipart/form-data" },
   timeout: 1000,
   withCredentials: true, // 이거없으면 passport의 deserializeUser()를 호출안해서 서버측에서 로그인유지가 안됨
@@ -291,6 +291,32 @@ async function getPostCount() {
   }
 }
 
+// 댓글 삭제
+async function removeComments(commentsId) {
+  try {
+    const { data } = await instance.delete("/comments", {
+      params: {
+        commentsId,
+      },
+    });
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// 댓글 수정
+async function apiEditComments(information) {
+  try {
+    const { data } = await instance.put("/comments", information);
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export {
   applyRegister,
   authLogin,
@@ -309,4 +335,6 @@ export {
   uploadComments,
   getCommentsCount,
   getPostCount,
+  removeComments,
+  apiEditComments,
 };

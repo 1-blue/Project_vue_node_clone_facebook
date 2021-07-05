@@ -7,9 +7,11 @@
         placeholder="댓글을 입력하세요..."
         class="textarea__comments"
         rows="1"
+        :value="contents"
         @keyup="resize"
         @keydown.shift.enter="notThing"
         @keydown.enter.exact.prevent="inputComments"
+        @keydown.esc.exact="$emit('close:commentEdit')"
         v-focus="isFocus"
       />
     </form>
@@ -17,7 +19,6 @@
 </template>
 
 <script>
-import { uploadComments } from "@/api/index.js";
 import ProfileImage from "@/components/common/ProfileImage.vue";
 
 export default {
@@ -36,7 +37,11 @@ export default {
     },
     isFocus: {
       type: Boolean,
-      required: true,
+      default: false,
+    },
+    contents: {
+      type: String,
+      default: "",
     },
   },
   methods: {
@@ -47,21 +52,8 @@ export default {
       if (!e.target.value) {
         return alert("내용을 입력해주세요");
       }
-      try {
-        await uploadComments(this.postId, e.target.value);
-        this.$filter.emitter.emit("fetch:postList");
-        e.target.value = "";
-      } catch (error) {
-        switch (error.response.status) {
-          case 503:
-            alert(error.response.data.message);
-            break;
-
-          default:
-            alert("알 수 없는 에러 by PostFooters.vue");
-            break;
-        }
-      }
+      this.$emit("submit:comments", e.target.value);
+      e.target.value = "";
     },
   },
 };

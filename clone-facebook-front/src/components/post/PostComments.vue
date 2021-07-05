@@ -1,6 +1,6 @@
 <template>
   <section id="post__comments">
-    <comments-input :postId="postId" :profileImage="profileImage" :isFocus="isFocus"></comments-input>
+    <comments-input :postId="postId" :profileImage="profileImage" :isFocus="isFocus" @submit:comments="appendComments"></comments-input>
     <ul id="comments__show">
       <comments-show v-for="comment in comments" :key="comment._id" :comment="comment"></comments-show>
     </ul>
@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import { uploadComments } from "@/api/index.js";
 import CommentsInput from "@/components/comments/CommentsInput.vue";
 import CommentsShow from "@/components/comments/CommentsShow.vue";
 
@@ -44,6 +45,24 @@ export default {
   computed: {
     isEnd() {
       return this.commentCount === this.comments.length;
+    },
+  },
+  methods: {
+    async appendComments(contents) {
+      try {
+        await uploadComments(this.postId, contents);
+        this.$filter.emitter.emit("fetch:postList");
+      } catch (error) {
+        switch (error.response.status) {
+          case 503:
+            alert(error.response.data.message);
+            break;
+
+          default:
+            alert("알 수 없는 에러 by PostComments.vue");
+            break;
+        }
+      }
     },
   },
 };

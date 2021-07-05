@@ -1,0 +1,104 @@
+<template>
+  <form class="form__post__option shadow" @submit.prevent>
+    <ul class="container__option__form">
+      <!-- 게시글 수정 -->
+      <li v-if="isOwner">
+        <button type="button" @click="$emit('show:editCommentFrom')">
+          <i class="fas fa-edit"></i>
+          <span class="button__text">수정</span>
+        </button>
+      </li>
+
+      <!-- 게시글 삭제 -->
+      <li v-if="isOwner">
+        <button type="button" @click="deleteComments">
+          <i class="fas fa-trash-alt"></i>
+          <span class="button__text">삭제</span>
+        </button>
+      </li>
+
+      <!-- 댓글 주인 아닐때 -->
+      <li v-if="!isOwner">
+        <span>댓글주인아님 나중에 추가할 생각</span>
+      </li>
+    </ul>
+  </form>
+</template>
+
+<script>
+import { removeComments } from "@/api/index.js";
+
+export default {
+  name: "FormCommentsOption",
+  props: {
+    username: {
+      type: String,
+      required: true,
+    },
+    commentsId: {
+      type: Number,
+      required: true,
+    },
+  },
+  computed: {
+    // 옵션버튼누른사람이 작성자인지 아닌지 판단
+    isOwner() {
+      return this.username === this.$store.state.name;
+    },
+  },
+  methods: {
+    async deleteComments() {
+      try {
+        await removeComments(this.commentsId);
+        this.$filter.emitter.emit("fetch:postList");
+      } catch (error) {
+        switch (error.response.status) {
+          case 503:
+            alert(error.response.data.message);
+            break;
+
+          default:
+            alert("알 수 없는 에러 by FormCommentsOption.vue");
+            break;
+        }
+      }
+    },
+  },
+};
+</script>
+
+<style scoped>
+.form__post__option {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  padding: 0.8rem;
+  border-radius: 0.5rem;
+  width: 18vw;
+  z-index: 9999;
+}
+
+.form__post__option button {
+  padding: 0.8rem 0.5rem;
+  border: none;
+  background: transparent;
+  width: 100%;
+  border-radius: 0.4rem;
+  transition: all 0.5s;
+  cursor: pointer;
+  text-align: start;
+}
+
+.form__post__option button:hover {
+  background: var(--gray-color);
+}
+
+.button__text {
+  vertical-align: baseline;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+}
+</style>
