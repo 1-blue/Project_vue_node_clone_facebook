@@ -149,4 +149,19 @@ router.delete("/cover", isLoggedIn, async (req, res) => {
   }
 });
 
+// 로그인한 유저의 프로필이미지 가져오기
+router.post("/userProfileImage", isLoggedIn, async (req, res) => {
+  try {
+    // 게시글 찾기
+    const response = await Image.findOne({
+      where: { UserId: req.user._id },
+      attributes: ["name"],
+    });
+
+    return res.json(response);
+  } catch (error) {
+    return res.status(503).json({ message: "서버측 에러입니다. by get => /post/userinfo", error });
+  }
+});
+
 module.exports = router;

@@ -1,8 +1,44 @@
 require("dotenv").config();
 const router = require("express").Router();
 const { isLoggedIn } = require("../middlewares/auth.js");
-const { Comment, Post } = require("../models/index.js");
+const { Comment, Post, User, Image } = require("../models/index.js");
 const sequelize = require("sequelize");
+
+// 댓글 정보 가져오기
+router.get("/", isLoggedIn, async (req, res) => {
+  const { postId, commentsCount } = req.query;
+
+  try {
+    // 게시글 찾기
+    const response = await Post.findOne({
+      where: { _id: postId },
+      attributes: ["_id"],
+      include: {
+        // 게시글의 댓글
+        model: Comment,
+        limit: +commentsCount,
+        include: {
+          // 게시글의 댓글을 쓴 유저
+          model: User,
+          attributes: ["name"],
+          include: {
+            // 게시글의 댓글을 쓴 유저의 프로필이미지
+            model: Image,
+            attributes: ["name"],
+            where: {
+              kinds: 0,
+            },
+          },
+        },
+      }
+    });
+
+    return res.json(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(503).json({ message: "서버측 에러입니다. by get => /like", error });
+  }
+});
 
 // 댓글 업로드
 router.post("/", isLoggedIn, async (req, res) => {
@@ -18,27 +54,6 @@ router.post("/", isLoggedIn, async (req, res) => {
     return res.json({ response });
   } catch (error) {
     return res.status(503).json({ message: "서버측 에러입니다. by comments => /post", error });
-  }
-});
-
-// 게시글의 댓글개수 가져오기
-router.get("/count", isLoggedIn, async (req, res) => {
-  const { PostId } = req.query;
-
-  try {
-    // 게시글 찾기
-    const response = await Post.findOne({
-      where: { _id: PostId },
-      attributes: ["_id"],
-      include: {
-        // 게시글의 댓글
-        model: Comment,
-        attributes: [[sequelize.fn("count", "_id"), "commentCount"]],
-      },
-    });
-    res.json(response)
-  } catch (error) {
-    res.json(error)
   }
 });
 
@@ -72,5 +87,27 @@ router.put("/", isLoggedIn, async (req, res) => {
     return res.status(503).json({ message: "서버측 에러입니다. by put => /comments", error });
   }
 });
+
+// 게시글의 댓글개수 가져오기
+router.get("/count", isLoggedIn, async (req, res) => {
+  const { PostId } = req.query;
+
+  try {
+    // 게시글 찾기
+    const response = await Post.findOne({
+      where: { _id: PostId },
+      attributes: ["_id"],
+      include: {
+        // 게시글의 댓글
+        model: Comment,
+        attributes: [[sequelize.fn("count", "_id"), "commentCount"]],
+      },
+    });
+    res.json(response)
+  } catch (error) {
+    res.json(error)
+  }
+});
+
 
 module.exports = router;
