@@ -11,7 +11,7 @@
 
       <!-- 게시글 삭제 -->
       <li v-if="isOwner">
-        <button type="button" @click="deleteComments">
+        <button type="button" @click="$emit('delete:comments')">
           <i class="fas fa-trash-alt"></i>
           <span class="button__text">삭제</span>
         </button>
@@ -26,8 +26,6 @@
 </template>
 
 <script>
-import { removeComments } from "@/api/index.js";
-
 export default {
   name: "FormCommentsOption",
   props: {
@@ -44,24 +42,6 @@ export default {
     // 옵션버튼누른사람이 작성자인지 아닌지 판단
     isOwner() {
       return this.username === this.$store.state.name;
-    },
-  },
-  methods: {
-    async deleteComments() {
-      try {
-        await removeComments(this.commentsId);
-        this.$filter.emitter.emit("fetch:postList");
-      } catch (error) {
-        switch (error.response.status) {
-          case 503:
-            alert(error.response.data.message);
-            break;
-
-          default:
-            alert("알 수 없는 에러 by FormCommentsOption.vue");
-            break;
-        }
-      }
     },
   },
 };

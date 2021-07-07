@@ -1,17 +1,24 @@
 <template>
   <div class="post__title">
+    <!-- 포스트작성 유저의 프로필이미지 -->
     <profile-image :profileImage="profileImage" :size="40"></profile-image>
 
-    <!--  포스트의 유저 및 포스트 업로드시간 -->
+    <!--  포스트작성 유저 및 포스트 업로드시간 -->
     <div class="wrapper__post__info">
       <div class="post__user__name">{{ username }}</div>
-      <div class="post__created__time" @mouseenter="isShowTime = true" @mouseleave="isShowTime = false">{{ $filter.timeFormat(updatedAt) }}</div>
-      <div class="show__time" v-show="isShowTime">{{ updatedTime }}</div>
+      <div class="post__created__time" @mouseenter="onUpdatedTime" @mouseleave="offUpdatedTime">{{ updatedTime }}</div>
+      <div class="show__time" v-show="isShowUpdatedTime">{{ detailUpdatedTime }}</div>
     </div>
 
-    <!-- 포스트 관련 옵션버튼 -->
+    <!-- 포스트 관련 옵션버튼 ( 수정 및 삭제 ) -->
     <span class="post__more__button" ref="postOptionButton">...</span>
-    <form-post-option class="post__option" :username="username" :postId="postId" v-show="isShowOption" @show:editForm="$emit('show:editForm')"></form-post-option>
+    <form-post-option
+      class="post__option"
+      :username="username"
+      @show:editForm="$emit('show:editForm')"
+      @delete:post="$emit('delete:post')"
+      v-if="isShowOption"
+    ></form-post-option>
   </div>
 </template>
 
@@ -26,13 +33,9 @@ export default {
     FormPostOption,
   },
   props: {
-    username: {
-      type: String,
+    userInfo: {
+      type: Object,
       required: true,
-    },
-    profileImage: {
-      type: String,
-      default: "",
     },
     updatedAt: {
       type: String,
@@ -45,12 +48,21 @@ export default {
   },
   data() {
     return {
-      isShowTime: false,
+      isShowUpdatedTime: false,
       isShowOption: false,
     };
   },
   computed: {
+    username() {
+      return this.userInfo.name;
+    },
+    profileImage() {
+      return this.userInfo.Images ? this.userInfo.Images[0].name : null;
+    },
     updatedTime() {
+      return this.$filter.timeFormat(this.updatedAt);
+    },
+    detailUpdatedTime() {
       return this.$filter.dateFormat(this.updatedAt, "YYYY년MM월DD일hh시mm분ss초");
     },
     currentClickNode() {
@@ -68,6 +80,16 @@ export default {
         return;
       }
       this.isShowOption = false;
+    },
+  },
+  methods: {
+    // 상세시간보기
+    onUpdatedTime() {
+      this.isShowUpdatedTime = true;
+    },
+    // 상세시간닫기
+    offUpdatedTime() {
+      this.isShowUpdatedTime = false;
     },
   },
 };

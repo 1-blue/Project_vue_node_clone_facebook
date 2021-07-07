@@ -10,7 +10,7 @@
         :value="contents"
         @keyup="resize"
         @keydown.shift.enter="notThing"
-        @keydown.enter.exact.prevent="inputComments"
+        @keydown.enter.exact.prevent="submitComments"
         @keydown.esc.exact="$emit('close:commentEdit')"
         v-focus="isFocus"
       />
@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { getProfileImage } from "@/api/index.js";
 import ProfileImage from "@/components/common/ProfileImage.vue";
 
 export default {
@@ -27,14 +28,6 @@ export default {
     ProfileImage,
   },
   props: {
-    postId: {
-      type: Number,
-      required: true,
-    },
-    profileImage: {
-      type: String,
-      required: true,
-    },
     isFocus: {
       type: Boolean,
       default: false,
@@ -44,11 +37,20 @@ export default {
       default: "",
     },
   },
+  data() {
+    return {
+      profileImage: "",
+    };
+  },
+  async created() {
+    const { name } = await getProfileImage();
+    this.profileImage = name;
+  },
   methods: {
     resize(e) {
       e.target.style.height = e.target.scrollHeight + "px";
     },
-    async inputComments(e) {
+    async submitComments(e) {
       if (!e.target.value) {
         return alert("내용을 입력해주세요");
       }

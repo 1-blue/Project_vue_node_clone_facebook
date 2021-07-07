@@ -1,8 +1,16 @@
 <template>
   <section id="section__post">
+    <!-- 게시글리스트 -->
     <ul class="post__container">
-      <post-one v-for="post in postList" :key="post._id" :post="post" @fetch:postList="$emit('fetch:postList')"></post-one>
+      <post-one
+        v-for="post in postList"
+        :key="post._id"
+        :post="post"
+        @fetch:postList="$emit('fetch:postList')"
+      ></post-one>
     </ul>
+
+    <!-- 게시글더불러오기 -->
     <button type="button" class="fetch__post__button" @click="$filter.emitter.emit('fetch:appendPost')" v-if="!isEnd">
       <i class="fas fa-reply"></i>
       <span> 게시글 더불러오기</span>
@@ -13,7 +21,7 @@
 
 <script>
 import { getPostCount } from "@/api/index.js";
-import PostOne from "@/components/common/PostOne.vue";
+import PostOne from "@/components/post/PostOne.vue";
 
 export default {
   name: "SectionPost",

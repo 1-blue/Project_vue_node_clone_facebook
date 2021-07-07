@@ -1,16 +1,20 @@
 <template>
   <section id="post__comments">
-    <comments-input :postId="postId" :profileImage="profileImage" :isFocus="isFocus" @submit:comments="appendComments"></comments-input>
+    <comments-input :isFocus="isFocus" @submit:comments="submitComments"></comments-input>
     <ul id="comments__show">
-      <comments-show v-for="comment in comments" :key="comment._id" :comment="comment"></comments-show>
+      <comments-show
+        v-for="comment in comments"
+        :key="comment._id"
+        :comment="comment"
+        @fetch:comments="$emit('fetch:comments')"
+      ></comments-show>
     </ul>
-    <button class="fetch__comments__button" @click="$filter.emitter.emit('fetch:appendComments')" v-if="!isEnd">댓글 더보기</button>
+    <button class="fetch__comments__button" @click="$emit('loading:comments')" v-if="!isEnd">댓글 더보기</button>
     <span class="fetch__comments__text" v-else>더이상 불러올 댓글이 없습니다.</span>
   </section>
 </template>
 
 <script>
-import { uploadComments } from "@/api/index.js";
 import CommentsInput from "@/components/comments/CommentsInput.vue";
 import CommentsShow from "@/components/comments/CommentsShow.vue";
 
@@ -21,48 +25,27 @@ export default {
     CommentsShow,
   },
   props: {
-    postId: {
-      type: Number,
-      required: true,
-    },
     comments: {
       type: Object,
-      required: true,
-    },
-    profileImage: {
-      type: String,
       required: true,
     },
     isFocus: {
       type: Boolean,
       required: true,
     },
-    commentCount: {
+    commentsCount: {
       type: Number,
       required: true,
     },
   },
   computed: {
     isEnd() {
-      return this.commentCount === this.comments.length;
+      return this.commentsCount === this.comments.length;
     },
   },
   methods: {
-    async appendComments(contents) {
-      try {
-        await uploadComments(this.postId, contents);
-        this.$filter.emitter.emit("fetch:postList");
-      } catch (error) {
-        switch (error.response.status) {
-          case 503:
-            alert(error.response.data.message);
-            break;
-
-          default:
-            alert("알 수 없는 에러 by PostComments.vue");
-            break;
-        }
-      }
+    submitComments(contents) {
+      this.$emit("submit:comments", contents);
     },
   },
 };

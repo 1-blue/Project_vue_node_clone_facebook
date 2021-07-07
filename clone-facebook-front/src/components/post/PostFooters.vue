@@ -2,7 +2,8 @@
   <section id="post__footers">
     <!-- 댓글이나 좋아요 개수를 보여주는 영역 -->
     <ul class="show">
-      <li class="like" @mouseenter="isShowLikeList = true" @mouseleave="isShowLikeList = false">
+      <!-- 좋아요 누른 사람 보여줌 -->
+      <li class="like" @mouseenter="onIsShowLikeList" @mouseleave="offIsShowLikeList">
         <i class="fas fa-thumbs-up icon__like"></i>
         <span>{{ likeCount }}</span>
         <ul class="like__list" v-show="isShowLikeList">
@@ -12,8 +13,10 @@
           </li>
         </ul>
       </li>
+
+      <!-- 댓글 개수 보여줌 -->
       <li class="comments" @click="clickShowComments">
-        <span>댓글 {{ commentCount }}개</span>
+        <span>댓글 {{ commentsCount }}개</span>
       </li>
     </ul>
 
@@ -21,9 +24,9 @@
 
     <!-- 댓글이나 좋아요를 추가하는 영역 -->
     <ul class="execute">
-      <li @click="clickLike">
+      <li @click="$emit('appendOrDelete:like', previousClickLike)">
         <i class="far fa-thumbs-up"></i>
-        <span v-if="isLike">좋아요 취소</span>
+        <span v-if="previousClickLike">좋아요 취소</span>
         <span v-else>좋아요</span>
       </li>
       <li @click="clickAddComments">
@@ -38,12 +41,19 @@
 
     <hr />
 
-    <post-comments :postId="postId" :comments="comments" :profileImage="profileImage" v-if="isShowComments" :isFocus="isFocus" :commentCount="commentCount"></post-comments>
+    <post-comments
+      :comments="comments"
+      :isFocus="isFocus"
+      :commentsCount="commentsCount"
+      @submit:comments="submitComments"
+      @loading:comments="$emit('loading:comments')"
+      @fetch:comments="$emit('fetch:comments')"
+      v-if="isShowComments"
+    ></post-comments>
   </section>
 </template>
 
 <script>
-import { appendLike, removeLike, getCommentsCount } from "@/api/index.js";
 import PostComments from "@/components/post/PostComments.vue";
 
 export default {
@@ -52,20 +62,20 @@ export default {
     PostComments,
   },
   props: {
-    postId: {
-      type: Number,
-      required: true,
-    },
     like: {
-      type: Object,
+      type: Array,
       required: true,
     },
     comments: {
-      type: Object,
+      type: Array,
       required: true,
     },
-    profileImage: {
-      type: String,
+    commentsFetchCount: {
+      type: Number,
+      required: true,
+    },
+    commentsCount: {
+      type: Number,
       required: true,
     },
   },
@@ -84,7 +94,7 @@ export default {
     likeCount() {
       return this.like.length;
     },
-    isLike() {
+    previousClickLike() {
       const temp = this.like.find(v => {
         if (v.User.name === this.username) {
           return v;
@@ -94,42 +104,31 @@ export default {
       return temp ? temp : false;
     },
   },
-  async created() {
-    // 총댓글 개수 가져오기
-    const response = await getCommentsCount(this.postId);
-    this.commentCount = response.Comments[0] ? response.Comments[0].commentCount : 0;
-  },
   methods: {
+    onIsShowLikeList() {
+      this.isShowLikeList = true;
+    },
+    offIsShowLikeList() {
+      this.isShowLikeList = false;
+    },
     clickShowComments() {
       this.isShowComments = !this.isShowComments;
       this.isFocus = false;
-      this.$filter.emitter.emit("fetch:resetComments");
+
+      // 댓글을 처음 불러올때만 호출
+      if (this.comments.length !== this.commentsFetchCount) {
+        this.$emit("fetch:comments");
+      }
     },
     clickAddComments() {
       this.isShowComments = true;
       this.isFocus = true;
-      this.$filter.emitter.emit("fetch:resetComments");
-    },
-    async clickLike() {
-      try {
-        if (this.isLike) {
-          await removeLike(this.isLike._id);
-        } else {
-          await appendLike(this.postId);
-        }
-
-        this.$emit("fetch:postList");
-      } catch (error) {
-        switch (error.response.status) {
-          case 503:
-            alert(error.response.data.message);
-            break;
-
-          default:
-            alert("알 수 없는 에러 by PostFooters.vue");
-            break;
-        }
+      if (this.comments.length !== this.commentsFetchCount) {
+        this.$emit("fetch:comments");
       }
+    },
+    submitComments(contents) {
+      this.$emit("submit:comments", contents);
     },
   },
 };

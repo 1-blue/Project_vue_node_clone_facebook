@@ -1,21 +1,27 @@
 <template>
   <form class="form__edit__post shadow" @submit.prevent>
+    <!-- 폼의 이름 -->
     <h1 class="title">게시글 수정</h1>
-    <button type="button" class="exit__button" @click="$emit('close:postEditForm')">
+
+    <!-- 폼 닫기 버튼 -->
+    <button type="button" class="exit__button" @click="$emit('close:EditForm')">
       <i class="far fa-times-circle"></i>
     </button>
 
+    <!-- 제목입력 -->
     <input type="text" class="input__title" placeholder="제목을 입력해주세요" v-model.trim="title" />
+
+    <!-- 내용입력 -->
     <textarea class="input__contents" :placeholder="defaultText" v-model.trim="contents" />
-    <button type="submit" class="btn" :class="{ btn__active: isSubmit }" @click="updatePost">
+
+    <!-- 제출버튼 -->
+    <button type="submit" class="btn" :class="{ btn__active: isSubmit }" @click="onEditPost">
       <span class="btn__text">수 정</span>
     </button>
   </form>
 </template>
 
 <script>
-import { editPost } from "@/api/index.js";
-
 export default {
   name: "FormEditPost",
   props: {
@@ -49,36 +55,12 @@ export default {
     this.contents = this.post.contents;
   },
   methods: {
-    async updatePost() {
+    onEditPost() {
       if (!this.isSubmit) {
         alert("제목과 내용을 모두 입력하고 제출버튼을 눌러주세요");
         return;
       }
-      try {
-        // 수정
-        await editPost({
-          _id: this.post._id,
-          title: this.title,
-          contents: this.contents,
-        });
-
-        // 포스트정보 다시 패치
-        this.$filter.emitter.emit("fetch:postList");
-
-        // 업데이트폼 닫기
-        this.$emit("close:postEditForm");
-        alert("수정이 완료되었습니다.");
-      } catch (error) {
-        if (error.response) {
-          switch (error.response.status) {
-            case 500:
-              alert(error.response.message);
-              break;
-          }
-        } else {
-          alert("FormEditPost.vue >> ", error);
-        }
-      }
+      this.$emit("edit:post", this.title, this.contents);
     },
   },
 };

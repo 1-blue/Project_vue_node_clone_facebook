@@ -70,6 +70,7 @@ imageInstance.interceptors.response.use(
   },
 );
 
+// ========================================= auth-section =========================================
 // 프로필이미지 업로드
 async function uploadProfileImage(profileImage) {
   try {
@@ -131,46 +132,7 @@ async function uploadPost(information) {
   }
 }
 
-// 현재 유저에게 보여줄 게시글 가져오기 ( 일단은 모든 게시글중에 10개씩 끊어서 가져오는걸로 )
-async function fetchPost(fetchPostNumber, fetchCommentsNumber) {
-  try {
-    const { data } = await instance.get("/post", {
-      params: {
-        fetchPostNumber,
-        fetchCommentsNumber,
-      },
-    });
-    return data;
-  } catch (error) {
-    throw error;
-  }
-}
-
-// 게시글 수정
-async function editPost(information) {
-  try {
-    const { data } = await instance.put("/post", information);
-    return data;
-  } catch (error) {
-    throw error;
-  }
-}
-
-// 게시글 삭제
-async function removePost(postId) {
-  try {
-    const { data } = await instance.delete("/post", {
-      params: {
-        postId,
-      },
-    });
-
-    return data;
-  } catch (error) {
-    throw error;
-  }
-}
-
+// ========================================= user-section =========================================
 // 유저와 관련된 정보 가져오기 ( 유저정보, 게시글정보, 이미지정보 )... 유저정보페이지에 사용
 async function fetchInformation() {
   try {
@@ -182,6 +144,7 @@ async function fetchInformation() {
   }
 }
 
+// ========================================= image-section =========================================
 // 프로필이미지 변경
 async function updateProfileImage(profileImage) {
   try {
@@ -231,6 +194,111 @@ async function removeCoverImage() {
   }
 }
 
+// 로그인한 유저의 프로필이미지
+async function getProfileImage() {
+  try {
+    // get호출시 cors오류남;
+    const { data } = await imageInstance.post("/userProfileImage");
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// ========================================= post-section =========================================
+// 현재 유저에게 보여줄 게시글 가져오기
+async function fetchPost(fetchPostCount) {
+  try {
+    const { data } = await instance.get("/post", {
+      params: {
+        fetchPostCount,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// 게시글작성유저의 정보
+async function fetchPostOfUserInfo(postId) {
+  try {
+    const { data } = await instance.get("/user/info", {
+      params: {
+        postId,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// 게시글좋아요 정보
+async function fetchPostOfLike(postId) {
+  try {
+    const { data } = await instance.get("/like", {
+      params: {
+        postId,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// 게시글 수정
+async function editPost(information) {
+  try {
+    const { data } = await instance.put("/post", information);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// 게시글 삭제
+async function deletePost(postId) {
+  try {
+    const { data } = await instance.delete("/post", {
+      params: {
+        postId,
+      },
+    });
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// 게시글좋아요 정보
+async function fetchPostOfComments(postId, commentsCount) {
+  try {
+    const { data } = await instance.get("/comments", {
+      params: {
+        postId,
+        commentsCount,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// 게시글의 개수 가져오기
+async function getPostCount() {
+  try {
+    const { data } = await instance.get("/post/count");
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// ========================================= like-section =========================================
 // 좋아요 추가
 async function appendLike(PostId) {
   try {
@@ -257,6 +325,7 @@ async function removeLike(likeId) {
   }
 }
 
+// ========================================= comments-section =========================================
 // 댓글 업로드
 async function uploadComments(PostId, contents) {
   try {
@@ -281,18 +350,8 @@ async function getCommentsCount(PostId) {
   }
 }
 
-// 게시글의 개수 가져오기
-async function getPostCount() {
-  try {
-    const { data } = await instance.get("/post/count");
-    return data;
-  } catch (error) {
-    throw error;
-  }
-}
-
 // 댓글 삭제
-async function removeComments(commentsId) {
+async function deleteComments(commentsId) {
   try {
     const { data } = await instance.delete("/comments", {
       params: {
@@ -307,7 +366,7 @@ async function removeComments(commentsId) {
 }
 
 // 댓글 수정
-async function apiEditComments(information) {
+async function editComments(information) {
   try {
     const { data } = await instance.put("/comments", information);
 
@@ -323,18 +382,22 @@ export {
   authLogout,
   uploadPost,
   fetchPost,
+  fetchPostOfUserInfo,
+  fetchPostOfLike,
   editPost,
-  removePost,
+  deletePost,
   fetchInformation,
   updateProfileImage,
   removeProfileImage,
   updateCoverImage,
   removeCoverImage,
+  getProfileImage,
   appendLike,
   removeLike,
+  fetchPostOfComments,
   uploadComments,
   getCommentsCount,
   getPostCount,
-  removeComments,
-  apiEditComments,
+  deleteComments,
+  editComments,
 };

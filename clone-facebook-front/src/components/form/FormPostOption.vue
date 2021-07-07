@@ -1,33 +1,36 @@
 <template>
   <form class="form__post__option shadow" @submit.prevent>
     <ul class="container__option__form">
-      <!-- 게시글 수정 -->
-      <li v-if="isWriter">
-        <button type="button" @click="$emit('show:editForm')">
-          <i class="fas fa-edit"></i>
-          <span class="button__text">수정</span>
-        </button>
-      </li>
+      <!-- 게시글작성자일경우 -->
+      <template v-if="isOwner">
+        <!-- 게시글 수정 -->
+        <li>
+          <button type="button" @click="$emit('show:editForm')">
+            <i class="fas fa-edit"></i>
+            <span class="button__text">수정</span>
+          </button>
+        </li>
 
-      <!-- 게시글 삭제 -->
-      <li v-if="isWriter">
-        <button type="button" @click="deletePost">
-          <i class="fas fa-trash-alt"></i>
-          <span class="button__text">삭제</span>
-        </button>
-      </li>
+        <!-- 게시글 삭제 -->
+        <li>
+          <button type="button" @click="$emit('delete:post')">
+            <i class="fas fa-trash-alt"></i>
+            <span class="button__text">삭제</span>
+          </button>
+        </li>
+      </template>
 
-      <!-- 게시글 주인 아닐때 -->
-      <li v-if="!isWriter">
-        <span>게시글주인아닐때 나중에 추가할 생각</span>
-      </li>
+      <!-- 게시글작성자가 아닐경우 -->
+      <template v-else>
+        <li>
+          <span>게시글주인아닐때 나중에 추가할 생각</span>
+        </li>
+      </template>
     </ul>
   </form>
 </template>
 
 <script>
-import { removePost } from "@/api/index.js";
-
 export default {
   name: "FormPostOption",
   props: {
@@ -35,37 +38,11 @@ export default {
       type: String,
       required: true,
     },
-    postId: {
-      type: Number,
-      required: true,
-    },
   },
   computed: {
     // 옵션버튼누른사람이 작성자인지 아닌지 판단
-    isWriter() {
+    isOwner() {
       return this.username === this.$store.state.name;
-    },
-  },
-  methods: {
-    async deletePost() {
-      try {
-        await removePost(this.postId);
-
-        alert("게시글 삭제가 완료되었습니다.");
-
-        // 게시글을 다시 패치하기
-        this.$filter.emitter.emit("fetch:postList");
-      } catch (error) {
-        if (error.response) {
-          switch (error.response.status) {
-            case 500:
-              alert(error.response.message);
-              break;
-          }
-        } else {
-          console.error("FormPostOption.vue >> ", error);
-        }
-      }
     },
   },
 };

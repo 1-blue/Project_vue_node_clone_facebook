@@ -1,5 +1,5 @@
 <template>
-  <li class="comments__list" @mouseenter="isShowCommentsOptionButton = true" @mouseleave="isShowCommentsOptionButton = false">
+  <li class="comments__list" @mouseenter="onIsShowCommentsOptionButton" @mouseleave="offIsShowCommentsOptionButton">
     <template v-if="!isShowCommentsEditForm">
       <!-- 댓글쓴 유저의 프로필 이미지 -->
       <profile-image :profileImage="profileImage"></profile-image>
@@ -9,19 +9,30 @@
         <div class="comments">
           <!-- 댓글내용 -->
           <pre class="comments__contents">
-          <strong>{{ username }}</strong>
-          {{ contents }}
-        </pre>
+            <strong>{{ username }}</strong>
+            {{ contents }}
+          </pre>
           <!-- 댓글 옵션 버튼 ( 수정 및 삭제 ) -->
-          <i class="fas fa-ellipsis-h comment__option__button" @click="isShowCommentsOption = !isShowCommentsOption" ref="commentsOptionButton"></i>
+          <i
+            class="fas fa-ellipsis-h comment__option__button"
+            @click="togleIsShowCommentsOptionForm"
+            ref="commentsOptionButton"
+            v-show="isShowCommentsOptionButton"
+          ></i>
         </div>
 
         <!-- 댓글밑에 추가정보 및 기능 -->
         <comments-footer :createdAt="createdAt"></comments-footer>
       </div>
 
-      <!-- 댓글 수정 및 삭제 -->
-      <form-comments-option :username="username" :commentsId="commentsId" v-if="isShowCommentsOption" @show:editCommentFrom="isShowCommentsEditForm = !isShowCommentsEditForm"></form-comments-option>
+      <!-- 댓글 수정 및 삭제버튼 -->
+      <form-comments-option
+        :username="username"
+        :commentsId="commentsId"
+        @show:editCommentFrom="togleIsShowCommentsEditForm"
+        @delete:comments="onDeleteComments"
+        v-if="isShowCommentsOptionForm"
+      ></form-comments-option>
     </template>
     <template v-else>
       <!-- 댓글 수정폼 -->
@@ -29,16 +40,16 @@
         :profileImage="profileImage"
         :postId="postId"
         :contents="contents"
+        @close:commentEdit="offIsShowCommentsEditForm"
+        @submit:comments="onEditComments"
         v-if="isShowCommentsEditForm"
-        @close:commentEdit="isShowCommentsEditForm = false"
-        @submit:comments="editComments"
       ></comments-input>
     </template>
   </li>
 </template>
 
 <script>
-import { apiEditComments } from "@/api/index.js";
+import { editComments, deleteComments } from "@/api/index.js";
 import ProfileImage from "@/components/common/ProfileImage.vue";
 import CommentsFooter from "@/components/comments/CommentsFooter.vue";
 import FormCommentsOption from "@/components/form/FormCommentsOption.vue";
@@ -61,7 +72,7 @@ export default {
   data() {
     return {
       isShowCommentsOptionButton: false,
-      isShowCommentsOption: false,
+      isShowCommentsOptionForm: false,
       isShowCommentsEditForm: false,
     };
   },
@@ -89,18 +100,20 @@ export default {
     // 옵션창외에 다른 곳을 누르면 옵션창 닫힘
     currentClickNode(clickNode) {
       if (clickNode !== this.$refs.commentsOptionButton) {
-        this.isShowCommentsOption = false;
+        this.isShowCommentsOptionForm = false;
         return;
       }
-      this.isShowCommentsOption = true;
+      this.isShowCommentsOptionForm = true;
       return;
     },
   },
   methods: {
-    async editComments(contents) {
+    // 댓글수정
+    async onEditComments(contents) {
       try {
-        await apiEditComments({ commentsId: this.commentsId, contents });
-        this.$filter.emitter.emit("fetch:postList");
+        await editComments({ commentsId: this.commentsId, contents });
+        this.$emit("fetch:comments");
+        this.offIsShowCommentsEditForm();
       } catch (error) {
         switch (error.response.status) {
           case 503:
@@ -112,6 +125,41 @@ export default {
             break;
         }
       }
+    },
+    // 댓글삭제
+    async onDeleteComments() {
+      try {
+        await deleteComments(this.commentsId);
+        this.$emit("fetch:comments");
+      } catch (error) {
+        switch (error.response.status) {
+          case 503:
+            alert(error.response.data.message);
+            break;
+
+          default:
+            alert("알 수 없는 에러 by FormCommentsOption.vue");
+            break;
+        }
+      }
+    },
+    // 댓글옵션버튼
+    onIsShowCommentsOptionButton() {
+      this.isShowCommentsOptionButton = true;
+    },
+    offIsShowCommentsOptionButton() {
+      this.isShowCommentsOptionButton = false;
+    },
+    // 댓글 수정폼
+    togleIsShowCommentsEditForm() {
+      this.isShowCommentsEditForm = !this.isShowCommentsEditForm;
+    },
+    offIsShowCommentsEditForm() {
+      this.isShowCommentsEditForm = false;
+    },
+    // 댓글옵션
+    togleIsShowCommentsOptionForm() {
+      this.isShowCommentsOptionForm = !this.isShowCommentsOptionForm;
     },
   },
 };

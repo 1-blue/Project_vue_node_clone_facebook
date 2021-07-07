@@ -13,7 +13,7 @@ export default {
   props: {
     profileImage: {
       type: String,
-      required: true,
+      default: "",
     },
     size: {
       type: Number,
