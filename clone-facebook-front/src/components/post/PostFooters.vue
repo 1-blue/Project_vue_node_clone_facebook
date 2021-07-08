@@ -89,7 +89,7 @@ export default {
   },
   computed: {
     username() {
-      return this.$store.state.name;
+      return this.$store.state.auth.name;
     },
     likeCount() {
       return this.like.length;

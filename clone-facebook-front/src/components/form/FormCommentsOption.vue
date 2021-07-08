@@ -33,15 +33,11 @@ export default {
       type: String,
       required: true,
     },
-    commentsId: {
-      type: Number,
-      required: true,
-    },
   },
   computed: {
     // 옵션버튼누른사람이 작성자인지 아닌지 판단
     isOwner() {
-      return this.username === this.$store.state.name;
+      return this.username === this.$store.state.auth.name;
     },
   },
 };

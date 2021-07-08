@@ -11,7 +11,7 @@
         @keyup="resize"
         @keydown.shift.enter="notThing"
         @keydown.enter.exact.prevent="submitComments"
-        @keydown.esc.exact="$emit('close:commentEdit')"
+        @keydown.esc.exact="$emit('close:commentInput')"
         v-focus="isFocus"
       />
     </form>
@@ -64,6 +64,7 @@ export default {
 <style scoped>
 #comments__input {
   display: flex;
+  width: 100%;
 }
 
 .form__comments {

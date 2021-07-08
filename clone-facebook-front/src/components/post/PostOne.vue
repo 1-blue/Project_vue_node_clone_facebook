@@ -216,7 +216,7 @@ export default {
         }
       }
     },
-    // 게시글의 총 댓글개수 세기
+    // 패치할 댓글개수 늘리기
     loadingComments() {
       this.commentsFetchCount += 5;
       this.onFetchPostOfComments();

@@ -13,7 +13,7 @@ const imageInstance = axios.create({
   withCredentials: true, // 이거없으면 passport의 deserializeUser()를 호출안해서 서버측에서 로그인유지가 안됨
 });
 
-// // 스피너 ON
+// // 인터셉터설정
 // instance.interceptors.request.use(
 //   config => {
 //     // 스피너 on
@@ -116,6 +116,20 @@ async function fetchInformation() {
   }
 }
 
+// 게시글작성유저의 정보
+async function fetchPostOfUserInfo(postId) {
+  try {
+    const { data } = await instance.get("/user/info", {
+      params: {
+        postId,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 // ========================================= image-section =========================================
 // 프로필이미지 변경
 async function updateProfileImage(profileImage) {
@@ -192,34 +206,6 @@ async function fetchPost(fetchPostCount) {
   }
 }
 
-// 게시글작성유저의 정보
-async function fetchPostOfUserInfo(postId) {
-  try {
-    const { data } = await instance.get("/user/info", {
-      params: {
-        postId,
-      },
-    });
-    return data;
-  } catch (error) {
-    throw error;
-  }
-}
-
-// 게시글좋아요 정보
-async function fetchPostOfLike(postId) {
-  try {
-    const { data } = await instance.get("/like", {
-      params: {
-        postId,
-      },
-    });
-    return data;
-  } catch (error) {
-    throw error;
-  }
-}
-
 // 게시글 수정
 async function editPost(information) {
   try {
@@ -245,21 +231,6 @@ async function deletePost(postId) {
   }
 }
 
-// 게시글좋아요 정보
-async function fetchPostOfComments(postId, commentsCount) {
-  try {
-    const { data } = await instance.get("/comments", {
-      params: {
-        postId,
-        commentsCount,
-      },
-    });
-    return data;
-  } catch (error) {
-    throw error;
-  }
-}
-
 // 게시글의 개수 가져오기
 async function getPostCount() {
   try {
@@ -271,6 +242,20 @@ async function getPostCount() {
 }
 
 // ========================================= like-section =========================================
+// 게시글 좋아요 정보
+async function fetchPostOfLike(postId) {
+  try {
+    const { data } = await instance.get("/like", {
+      params: {
+        postId,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 // 좋아요 추가
 async function appendLike(PostId) {
   try {
@@ -302,6 +287,21 @@ async function removeLike(likeId) {
 async function uploadComments(PostId, contents) {
   try {
     const { data } = await instance.post("/comments", { PostId, contents });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// 게시글의 댓글 가져오기
+async function fetchPostOfComments(postId, commentsCount) {
+  try {
+    const { data } = await instance.get("/comments", {
+      params: {
+        postId,
+        commentsCount,
+      },
+    });
     return data;
   } catch (error) {
     throw error;
@@ -348,6 +348,72 @@ async function editComments(information) {
   }
 }
 
+// ========================================= recomments-section =========================================
+// 대댓글 업로드
+async function uploadRecomments(CommentId, contents) {
+  try {
+    const { data } = await instance.post("/recomments", { CommentId, contents });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// 댓글의 대댓글 가져오기
+async function fetchCommentsOfRecomments(commentId, recommentsCount) {
+  try {
+    const { data } = await instance.get("/recomments", {
+      params: {
+        commentId,
+        recommentsCount,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// 게시글의 댓글개수 가져오기
+async function getRecommentsCount(CommentId) {
+  try {
+    const { data } = await instance.get("/recomments/count", {
+      params: {
+        CommentId,
+      },
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// 댓글 삭제
+async function deleteRecomments(recommentsId) {
+  try {
+    const { data } = await instance.delete("/recomments", {
+      params: {
+        recommentsId,
+      },
+    });
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// 댓글 수정
+async function editRecomments(information) {
+  try {
+    const { data } = await instance.put("/recomments", information);
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export {
   applyRegister,
   authLogin,
@@ -372,4 +438,9 @@ export {
   getPostCount,
   deleteComments,
   editComments,
+  uploadRecomments,
+  fetchCommentsOfRecomments,
+  getRecommentsCount,
+  deleteRecomments,
+  editRecomments,
 };

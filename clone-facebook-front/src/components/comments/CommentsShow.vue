@@ -1,56 +1,53 @@
 <template>
-  <li class="comments__list" @mouseenter="onIsShowCommentsOptionButton" @mouseleave="offIsShowCommentsOptionButton">
+  <li class="comments__list">
     <template v-if="!isShowCommentsEditForm">
       <!-- 댓글쓴 유저의 프로필 이미지 -->
       <profile-image :profileImage="profileImage"></profile-image>
 
       <!-- 댓글 -->
       <div class="comments__container">
-        <div class="comments">
-          <!-- 댓글내용 -->
-          <pre class="comments__contents">
-            <strong>{{ username }}</strong>
-            {{ contents }}
-          </pre>
-          <!-- 댓글 옵션 버튼 ( 수정 및 삭제 ) -->
-          <i
-            class="fas fa-ellipsis-h comment__option__button"
-            @click="togleIsShowCommentsOptionForm"
-            ref="commentsOptionButton"
-            v-show="isShowCommentsOptionButton"
-          ></i>
-        </div>
+        <!-- 댓글내용 -->
+        <comments-contents
+          :username="username"
+          :contents="contents"
+          :isShowCommentsOptionButton="isShowCommentsOptionButton"
+          :isShowCommentsOptionForm="isShowCommentsOptionForm"
+          @mouseenter="onIsShowCommentsOptionButton"
+          @mouseleave="offIsShowCommentsOptionButton"
+          @toggle:showCommentsOptionForm="toggleIsShowCommentsOptionForm"
+        ></comments-contents>
 
         <!-- 댓글밑에 추가정보 및 기능 -->
-        <comments-footer :createdAt="createdAt"></comments-footer>
+        <comments-footer :commentsId="commentsId" :createdAt="createdAt"></comments-footer>
       </div>
-
-      <!-- 댓글 수정 및 삭제버튼 -->
-      <form-comments-option
-        :username="username"
-        :commentsId="commentsId"
-        @show:editCommentFrom="togleIsShowCommentsEditForm"
-        @delete:comments="onDeleteComments"
-        v-if="isShowCommentsOptionForm"
-      ></form-comments-option>
     </template>
+
+    <!-- 댓글 수정버튼 클릭시 -->
     <template v-else>
       <!-- 댓글 수정폼 -->
       <comments-input
         :profileImage="profileImage"
-        :postId="postId"
         :contents="contents"
-        @close:commentEdit="offIsShowCommentsEditForm"
         @submit:comments="onEditComments"
+        @close:commentInput="offIsShowCommentsEditForm"
         v-if="isShowCommentsEditForm"
       ></comments-input>
     </template>
+
+    <!-- 댓글 수정 및 삭제버튼 -->
+    <form-comments-option
+      :username="username"
+      @show:editCommentFrom="togleIsShowCommentsEditForm"
+      @delete:comments="onDeleteComments"
+      v-if="isShowCommentsOptionForm"
+    ></form-comments-option>
   </li>
 </template>
 
 <script>
 import { editComments, deleteComments } from "@/api/index.js";
 import ProfileImage from "@/components/common/ProfileImage.vue";
+import CommentsContents from "@/components/comments/CommentsContents.vue";
 import CommentsFooter from "@/components/comments/CommentsFooter.vue";
 import FormCommentsOption from "@/components/form/FormCommentsOption.vue";
 import CommentsInput from "@/components/comments/CommentsInput.vue";
@@ -59,6 +56,7 @@ export default {
   name: "CommentsShow",
   components: {
     ProfileImage,
+    CommentsContents,
     CommentsFooter,
     FormCommentsOption,
     CommentsInput,
@@ -91,20 +89,6 @@ export default {
     },
     commentsId() {
       return this.comment._id;
-    },
-    currentClickNode() {
-      return this.$store.state.currentClickNode;
-    },
-  },
-  watch: {
-    // 옵션창외에 다른 곳을 누르면 옵션창 닫힘
-    currentClickNode(clickNode) {
-      if (clickNode !== this.$refs.commentsOptionButton) {
-        this.isShowCommentsOptionForm = false;
-        return;
-      }
-      this.isShowCommentsOptionForm = true;
-      return;
     },
   },
   methods: {
@@ -143,23 +127,23 @@ export default {
         }
       }
     },
-    // 댓글옵션버튼
+    // 댓글옵션버튼 보일지말지
     onIsShowCommentsOptionButton() {
       this.isShowCommentsOptionButton = true;
     },
     offIsShowCommentsOptionButton() {
       this.isShowCommentsOptionButton = false;
     },
-    // 댓글 수정폼
+    // 댓글 수정폼 보일지말지
     togleIsShowCommentsEditForm() {
       this.isShowCommentsEditForm = !this.isShowCommentsEditForm;
     },
     offIsShowCommentsEditForm() {
       this.isShowCommentsEditForm = false;
     },
-    // 댓글옵션
-    togleIsShowCommentsOptionForm() {
-      this.isShowCommentsOptionForm = !this.isShowCommentsOptionForm;
+    // 댓글옵션폼 보일지말지 토글
+    toggleIsShowCommentsOptionForm(value) {
+      this.isShowCommentsOptionForm = value;
     },
   },
 };
@@ -172,31 +156,7 @@ export default {
   margin-bottom: 1rem;
 }
 
-.comments {
-  display: flex;
-  align-items: center;
-}
-
-.comments__contents {
-  display: inline-block;
-  margin: 0;
-  background: var(--light-gray-color);
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-}
-
-.comment__option__button {
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  font-size: 1rem;
-  color: gray;
-  margin-left: 1rem;
-  padding: 0.5rem;
-}
-.comment__option__button:hover {
-  background: var(--light-gray-color);
-  border-radius: 50%;
-  cursor: pointer;
+.comments__container {
+  flex-grow: 1;
 }
 </style>
