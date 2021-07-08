@@ -48,7 +48,7 @@ router.beforeEach((to, from, next) => {
   // 로그인해야 접근가능한페이지이면
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // 로그인 안했을경우
-    if (!store.getters.isLogin) {
+    if (!store.getters["auth/isLogin"]) {
       return next({ path: "/login" });
     }
     next();

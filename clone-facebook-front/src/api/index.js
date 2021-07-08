@@ -1,74 +1,46 @@
 /* eslint-disable no-useless-catch */
 import axios from "axios";
-import store from "@/store/index.js";
 
 // axios인스턴스생성
 const instance = axios.create({
   baseURL: `${process.env.VUE_APP_LOCAL_URL}`,
-  timeout: 1000,
   withCredentials: true, // 이거없으면 passport의 deserializeUser()를 호출안해서 서버측에서 로그인유지가 안됨
 });
 
 const imageInstance = axios.create({
   baseURL: `${process.env.VUE_APP_LOCAL_URL}/image`,
   header: { "content-type": "multipart/form-data" },
-  timeout: 1000,
   withCredentials: true, // 이거없으면 passport의 deserializeUser()를 호출안해서 서버측에서 로그인유지가 안됨
 });
 
-// 스피너 ON
-instance.interceptors.request.use(
-  config => {
-    // 스피너 on
-    // store.dispatch("SPINNER_ON");
-    return config;
-  },
-  error => {
-    // 스피너 off
-    store.dispatch("SPINNER_OFF");
-    return Promise.reject(error);
-  },
-);
-// 스피너 OFF
-instance.interceptors.response.use(
-  function (response) {
-    // 스피너 off
-    store.dispatch("SPINNER_OFF");
-    return response;
-  },
-  function (error) {
-    // 스피너 off
-    store.dispatch("SPINNER_OFF");
-    return Promise.reject(error);
-  },
-);
-
-// 스피너 ON
-imageInstance.interceptors.request.use(
-  config => {
-    // 스피너 on
-    // store.dispatch("SPINNER_ON");
-    return config;
-  },
-  error => {
-    // 스피너 off
-    store.dispatch("SPINNER_OFF");
-    return Promise.reject(error);
-  },
-);
-// 스피너 OFF
-imageInstance.interceptors.response.use(
-  function (response) {
-    // 스피너 off
-    store.dispatch("SPINNER_OFF");
-    return response;
-  },
-  function (error) {
-    // 스피너 off
-    store.dispatch("SPINNER_OFF");
-    return Promise.reject(error);
-  },
-);
+// // 스피너 ON
+// instance.interceptors.request.use(
+//   config => {
+//     // 스피너 on
+//     console.log("on");
+//     store.dispatch("spinner/SPINNER_ON");
+//     return config;
+//   },
+//   error => {
+//     // 스피너 off
+//     store.dispatch("spinner/SPINNER_OFF");
+//     return Promise.reject(error);
+//   },
+// );
+// // 스피너 OFF
+// instance.interceptors.response.use(
+//   function (response) {
+//     // 스피너 off
+//     console.log("off");
+//     store.dispatch("spinner/SPINNER_OFF");
+//     return response;
+//   },
+//   function (error) {
+//     // 스피너 off
+//     store.dispatch("spinner/SPINNER_OFF");
+//     return Promise.reject(error);
+//   },
+// );
 
 // ========================================= auth-section =========================================
 // 프로필이미지 업로드

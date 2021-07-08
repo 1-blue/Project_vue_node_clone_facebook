@@ -19,7 +19,7 @@ export default {
   },
   computed: {
     username() {
-      return this.$store.state.name;
+      return this.$store.state.auth.name;
     },
     defaultText() {
       return `${this.username}님, 무슨 생각을 하고 계신가요?`;

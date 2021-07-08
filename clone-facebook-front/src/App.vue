@@ -1,26 +1,17 @@
 <template>
   <div id="app" @click="clickNode">
-    <!-- 스피너 off -->
-    <template v-if="!spinner">
-      <!-- 로그인 했을경우 -->
-      <template v-if="isLogin">
-        <navigation-bar></navigation-bar>
-        <router-view></router-view>
-      </template>
-
-      <!-- 로그인 안했을경우 -->
-      <template v-else>
-        <router-view></router-view>
-      </template>
+    <!-- 로그인 했을경우 -->
+    <template v-if="isLogin">
+      <navigation-bar></navigation-bar>
+      <router-view></router-view>
     </template>
 
-    <!-- 스피너 on -->
+    <!-- 로그인 안했을경우 -->
     <template v-else>
-      <template v-if="isLogin">
-        <navigation-bar></navigation-bar>
-      </template>
-      <my-spinner class="spinner"></my-spinner>
+      <router-view></router-view>
     </template>
+
+    <my-spinner class="spinner" v-if="spinner"></my-spinner>
   </div>
 </template>
 
@@ -36,15 +27,15 @@ export default {
   },
   computed: {
     isLogin() {
-      return this.$store.getters.isLogin;
+      return this.$store.getters["auth/isLogin"];
     },
     spinner() {
-      return this.$store.state.spinner;
+      return this.$store.state.spinner.spinner;
     },
   },
   methods: {
     clickNode(e) {
-      this.$store.state.currentClickNode = e.target;
+      this.$store.state.link.currentClickNode = e.target;
     },
   },
 };

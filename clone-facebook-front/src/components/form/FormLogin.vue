@@ -52,7 +52,7 @@ export default {
     async login() {
       try {
         const data = await authLogin(this.information);
-        this.$store.dispatch("SET_USER", data);
+        this.$store.dispatch("auth/SET_USER", data);
         this.$router.push("/");
       } catch (error) {
         console.log(error);

@@ -67,13 +67,13 @@ export default {
   },
   computed: {
     currentLink() {
-      return this.$store.state.currentLink;
+      return this.$store.state.link.currentLink;
     },
     currentClickNode() {
-      return this.$store.state.currentClickNode;
+      return this.$store.state.link.currentClickNode;
     },
     username() {
-      return this.$store.state.name;
+      return this.$store.state.auth.name;
     },
     _$information() {
       return this.$refs.information.$el;
@@ -105,8 +105,8 @@ export default {
   },
   mounted() {
     // 링크 데코레이션 초기값 지정
-    this.$store.state.currentLink = this._$home;
-    this.$store.state.homeLink = this._$home;
+    this.$store.state["link/currentLink"] = this._$home;
+    this.$store.state["link/homeLink"] = this._$home;
 
     this.linkDecoration(this._$home);
     // 최초 로그인시에만 실행하도록 변경해야함
@@ -199,16 +199,16 @@ export default {
     // 클릭한 링크 데코레이션 삭제
     routerLinkRemove() {
       if (this.currentLink) {
-        this.$store.dispatch("LINK_REMOVE");
+        this.$store.dispatch("link/LINK_REMOVE");
       }
     },
     // 이전에 클릭한 링크 기록하기
     routerLinkRecode(target) {
-      this.$store.dispatch("LINK_RECODE", target);
+      this.$store.dispatch("link/LINK_RECODE", target);
     },
     // 현재 클릭한 링크에 데코레이션 넣기
     routerLinkAppend(target) {
-      this.$store.dispatch("LINK_APPEND", target);
+      this.$store.dispatch("link/LINK_APPEND", target);
     },
   },
 };
