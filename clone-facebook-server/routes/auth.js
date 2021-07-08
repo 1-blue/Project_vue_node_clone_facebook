@@ -4,6 +4,7 @@ const passport = require("passport");
 const bcrypt = require("bcrypt");
 const { isNotLoggedIn, isLoggedIn } = require("../middlewares/auth.js");
 const { User, Image } = require("../models/index.js");
+const { IMAGE } = require("../global/globalVariable.js");
 
 // 회원가입
 router.post("/register", isNotLoggedIn, async (req, res) => {
@@ -24,14 +25,14 @@ router.post("/register", isNotLoggedIn, async (req, res) => {
 
     // 프로필 이미지 생성
     await Image.create({
-      kinds: 0,
+      kinds: IMAGE.PROFILE_IMAGE,
       name: profileImageName,
       UserId: response._id,
     });
 
     // 커버 이미지 생성
     await Image.create({
-      kinds: 1,
+      kinds: IMAGE.COVER_IMAGE,
       name: null,
       UserId: response._id,
     });

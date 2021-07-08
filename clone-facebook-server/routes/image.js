@@ -3,6 +3,7 @@ const fs = require("fs");
 const { profileImageUpload, coverImageUpload } = require("../multer/index.js");
 const { isLoggedIn, isNotLoggedIn } = require("../middlewares/auth.js");
 const { Image } = require("../models/index.js");
+const { IMAGE } = require("../global/globalVariable.js");
 
 // 프로필이미지 저장 ( 회원가입시 )
 router.post("/profile", isNotLoggedIn, profileImageUpload.single("profileImage"), async (req, res) => {
@@ -31,7 +32,7 @@ router.put("/profile", isLoggedIn, profileImageUpload.single("profileImage"), as
     const image = await Image.findOne({
       where: {
         UserId: req.user._id,
-        kinds: 0,
+        kinds: IMAGE.PROFILE_IMAGE,
       },
     });
 
@@ -67,7 +68,7 @@ router.put("/cover", isLoggedIn, coverImageUpload.single("coverImage"), async (r
     const image = await Image.findOne({
       where: {
         UserId: req.user._id,
-        kinds: 1,
+        kinds: IMAGE.COVER_IMAGE,
       },
     });
 
@@ -96,7 +97,7 @@ router.delete("/profile", isLoggedIn, async (req, res) => {
     const image = await Image.findOne({
       where: {
         UserId: req.user._id,
-        kinds: 0,
+        kinds: IMAGE.PROFILE_IMAGE,
       },
     });
 
@@ -126,7 +127,7 @@ router.delete("/cover", isLoggedIn, async (req, res) => {
     const image = await Image.findOne({
       where: {
         UserId: req.user._id,
-        kinds: 1,
+        kinds: IMAGE.COVER_IMAGE,
       },
     });
 

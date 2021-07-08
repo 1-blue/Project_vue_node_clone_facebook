@@ -2,6 +2,7 @@ require("dotenv").config();
 const router = require("express").Router();
 const { isLoggedIn } = require("../middlewares/auth.js");
 const { User, Post, Image } = require("../models/index.js");
+const { IMAGE } = require("../global/globalVariable.js");
 
 // 유저와 관련된 정보 가져오기 ( 유저정보, 게시글정보, 이미지정보 )
 router.get("/", isLoggedIn, async (req, res) => {
@@ -46,7 +47,7 @@ router.get("/info", isLoggedIn, async (req, res) => {
           model: Image,
           attributes: ["name"],
           where: {
-            kinds: 0,
+            kinds: IMAGE.PROFILE_IMAGE,
           },
         },
       },

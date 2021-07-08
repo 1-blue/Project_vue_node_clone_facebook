@@ -3,6 +3,7 @@ const router = require("express").Router();
 const { isLoggedIn } = require("../middlewares/auth.js");
 const { Comment, Post, User, Image } = require("../models/index.js");
 const sequelize = require("sequelize");
+const { IMAGE } = require("../global/globalVariable.js");
 
 // 댓글 정보 가져오기
 router.get("/", isLoggedIn, async (req, res) => {
@@ -26,7 +27,7 @@ router.get("/", isLoggedIn, async (req, res) => {
             model: Image,
             attributes: ["name"],
             where: {
-              kinds: 0,
+              kinds: IMAGE.PROFILE_IMAGE,
             },
           },
         },
