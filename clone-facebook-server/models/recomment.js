@@ -31,7 +31,10 @@ module.exports = class Reomment extends Sequelize.Model {
   }
 
   static associate(db) {
+    // 대댓글과 유저 ( 1 : N )
+    db.Recomment.belongsTo(db.User, { forginKey: "userId", targetKey: "_id", onDelete: "CASCADE" });
+    
     // 대댓글과 댓글 ( 1 : N )
-    db.Recomment.belongsTo(db.Comment, { forginKey: "commentId", targetKey: "_id" });
+    db.Recomment.belongsTo(db.Comment, { forginKey: "commentId", targetKey: "_id", onDelete: "CASCADE" });
   }
 };

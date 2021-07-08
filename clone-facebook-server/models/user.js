@@ -70,6 +70,9 @@ module.exports = class User extends Sequelize.Model {
     // 유저와 댓글 ( 1 : N )
     db.User.hasMany(db.Comment, { forginKey: "userId", targetKey: "_id", onDelete: "CASCADE" });
 
+    // 유저와 대댓글 ( 1 : N )
+    db.User.hasMany(db.Recomment, { forginKey: "userId", targetKey: "_id", onDelete: "CASCADE" });
+
     // 친구관계
     db.User.hasOne(db.Friend, { forginKey: "fk_userId", targetKey: "_id", onDelete: "CASCADE" })
   }

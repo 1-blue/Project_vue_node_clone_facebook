@@ -75,6 +75,7 @@ const imageRouter = require("./routes/image.js");
 const userRouter = require("./routes/user.js");
 const likeRouter = require("./routes/like.js");
 const commentsRouter = require("./routes/comments.js");
+const recommentsRouter = require("./routes/recomments.js");
 
 app.use("/auth", authRouter);
 app.use("/post", postRouter);
@@ -82,6 +83,7 @@ app.use("/image", imageRouter);
 app.use("/user", userRouter);
 app.use("/like", likeRouter);
 app.use("/comments", commentsRouter);
+app.use("/recomments", recommentsRouter);
 
 app.listen(app.get("port"), () => {
   console.log(`${app.get("port")}번 대기중`);

@@ -32,12 +32,12 @@ module.exports = class Comment extends Sequelize.Model {
 
   static associate(db) {
     // 댓글과 유저 ( 1 : N )
-    db.Comment.belongsTo(db.User, { forginKey: "userId", targetKey: "_id" });
+    db.Comment.belongsTo(db.User, { forginKey: "userId", targetKey: "_id", onDelete: "CASCADE" });
 
     // 댓글과 포스트 ( 1 : N )
-    db.Comment.belongsTo(db.Post, { forginKey: "postId", targetKey: "_id" });
+    db.Comment.belongsTo(db.Post, { forginKey: "postId", targetKey: "_id", onDelete: "CASCADE" });
     
     // 댓글과 대댓글 ( 1 : N )
-    db.Comment.hasMany(db.Recomment, { forginKey: "commentId", targetKey: "_id" });
+    db.Comment.hasMany(db.Recomment, { forginKey: "commentId", targetKey: "_id", onDelete: "CASCADE" });
   }
 };
