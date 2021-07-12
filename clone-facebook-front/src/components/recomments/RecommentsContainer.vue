@@ -20,8 +20,7 @@
           v-for="recomments in recommentsList"
           :key="recomments._id"
           :recomments="recomments"
-          @mouseenter="isShowRecommentsOptionButton = true"
-          @mouseleave="isShowRecommentsOptionButton = false"
+          @fetch:recomments="onRecommentsFetch"
         ></recomments-show>
       </ul>
     </template>
@@ -65,9 +64,8 @@ export default {
       return false;
     },
   },
-  async created() {
-    await this.onFetchCommentsOfRecomments();
-    this.onGetRecommentsCount();
+  created() {
+    this.onRecommentsFetch();
   },
   methods: {
     // 대댓글 패치하기
@@ -81,6 +79,10 @@ export default {
         const { Recomments } = await getRecommentsCount(this.commentsId);
         this.recommentCount = Recomments[0].recommentCount;
       }
+    },
+    async onRecommentsFetch() {
+      await this.onFetchCommentsOfRecomments();
+      this.onGetRecommentsCount();
     },
     // 답글생성
     async onSubmitRecomments(contents) {

@@ -374,7 +374,7 @@ async function fetchCommentsOfRecomments(commentId, recommentsCount) {
   }
 }
 
-// 게시글의 댓글개수 가져오기
+// 게시글의 대댓글개수 가져오기
 async function getRecommentsCount(CommentId) {
   try {
     const { data } = await instance.get("/recomments/count", {
@@ -388,7 +388,7 @@ async function getRecommentsCount(CommentId) {
   }
 }
 
-// 댓글 삭제
+// 대댓글 삭제
 async function deleteRecomments(recommentsId) {
   try {
     const { data } = await instance.delete("/recomments", {
