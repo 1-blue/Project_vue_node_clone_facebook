@@ -5,10 +5,11 @@
       <strong>{{ username }}</strong>
       {{ contents }}
     </pre>
+
     <!-- 댓글 옵션 버튼 ( 수정 및 삭제 ) -->
     <i
       class="fas fa-ellipsis-h comment__option__button"
-      @click="$emit('toggle:showCommentsOptionForm', !isShowCommentsOptionForm)"
+      @click="$emit('toggle:showCommentsOptionForm')"
       ref="commentsOptionButton"
       v-show="isShowCommentsOptionButton"
     ></i>
@@ -31,10 +32,6 @@ export default {
       type: Boolean,
       required: true,
     },
-    isShowCommentsOptionForm: {
-      type: Boolean,
-      required: true,
-    },
   },
   computed: {
     currentClickNode() {
@@ -45,10 +42,10 @@ export default {
     // 옵션창외에 다른 곳을 누르면 옵션창 닫힘
     currentClickNode(clickNode) {
       if (clickNode !== this.$refs.commentsOptionButton) {
-        this.$emit("toggle:showCommentsOptionForm", false);
+        this.$emit("change:showCommentsOptionForm", false);
         return;
       }
-      this.$emit("toggle:showCommentsOptionForm", true);
+      this.$emit("change:showCommentsOptionForm", true);
       return;
     },
   },

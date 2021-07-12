@@ -1,51 +1,57 @@
 <template>
   <section id="post__comments">
-    <comments-input :isFocus="isFocus" @submit:comments="submitComments"></comments-input>
+    <!-- 댓글 입력 -->
+    <comments-input :isFocus="isFocus" @append:comments="appendComments"></comments-input>
+
+    <!-- 댓글 목록 보여주기 -->
     <ul id="comments__show">
-      <comments-show
+      <comments-component
         v-for="comment in comments"
         :key="comment._id"
         :comment="comment"
         @fetch:comments="$emit('fetch:comments')"
-      ></comments-show>
+      ></comments-component>
     </ul>
-    <button class="fetch__comments__button" @click="$emit('loading:comments')" v-if="!isEnd">댓글 더보기</button>
+
+    <!-- 댓글 더보기 버튼 -->
+    <button class="fetch__comments__button" @click="$emit('loading:moreComments')" v-if="!isEnd">댓글 더보기</button>
     <span class="fetch__comments__text" v-else>더이상 불러올 댓글이 없습니다.</span>
   </section>
 </template>
 
 <script>
-import CommentsInput from "@/components/comments/CommentsInput.vue";
-import CommentsShow from "@/components/comments/CommentsShow.vue";
+import CommentsInput from "@/components/common/CommentsInput.vue";
+import CommentsComponent from "@/components/Home/Comments/CommentsComponent.vue";
 
 export default {
   name: "PostComments",
   components: {
     CommentsInput,
-    CommentsShow,
+    CommentsComponent,
   },
   props: {
     comments: {
       type: Object,
       required: true,
     },
-    isFocus: {
-      type: Boolean,
+    totalCommentsNumber: {
+      type: Number,
       required: true,
     },
-    commentsCount: {
-      type: Number,
+    isFocus: {
+      type: Boolean,
       required: true,
     },
   },
   computed: {
     isEnd() {
-      return this.commentsCount === this.comments.length;
+      return this.totalCommentsNumber === this.comments.length;
     },
   },
   methods: {
-    submitComments(contents) {
-      this.$emit("submit:comments", contents);
+    // 댓글 업로드
+    appendComments(contents) {
+      this.$emit("append:comments", contents);
     },
   },
 };

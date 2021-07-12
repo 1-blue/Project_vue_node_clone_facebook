@@ -3,15 +3,26 @@
     <!-- 포스트작성 유저의 프로필이미지 -->
     <profile-image :profileImage="profileImage" :size="40"></profile-image>
 
-    <!--  포스트작성 유저 및 포스트 업로드시간 -->
+    <!--  포스트작성 유저이름 및 포스트 업로드시간 -->
     <div class="wrapper__post__info">
-      <div class="post__user__name">{{ username }}</div>
-      <div class="post__created__time" @mouseenter="onUpdatedTime" @mouseleave="offUpdatedTime">{{ updatedTime }}</div>
-      <div class="show__time" v-show="isShowUpdatedTime">{{ detailUpdatedTime }}</div>
+      <!-- 포스트작성 유저이름 -->
+      <span class="post__user__name">
+        {{ username }}
+      </span>
+      <!-- 포스트 작성 시간 -->
+      <span class="post__created__time" @mouseenter="showUpdatedTime" @mouseleave="hideUpdatedTime">
+        {{ updatedTime }}
+      </span>
+      <!-- 포스트 작성 시간 (상세) -->
+      <span class="show__time" v-show="isShowUpdatedTime">
+        {{ detailUpdatedTime }}
+      </span>
     </div>
 
-    <!-- 포스트 관련 옵션버튼 ( 수정 및 삭제 ) -->
-    <span class="post__more__button" ref="postOptionButton">...</span>
+    <!-- 포스트 옵션폼 버튼 -->
+    <span class="post__more__button" ref="postOptionButton" @click="isShowOption = !isShowOption">...</span>
+
+    <!-- 포스트 옵션 폼 ( 수정 및 삭제 ) -->
     <form-post-option
       class="post__option"
       :username="username"
@@ -41,10 +52,6 @@ export default {
       type: String,
       required: true,
     },
-    postId: {
-      type: Number,
-      required: true,
-    },
   },
   data() {
     return {
@@ -66,7 +73,7 @@ export default {
       return this.$filter.dateFormat(this.updatedAt, "YYYY년MM월DD일hh시mm분ss초");
     },
     currentClickNode() {
-      return this.$store.state.currentClickNode;
+      return this.$store.state.link.currentClickNode;
     },
     postOptionButton() {
       return this.$refs.postOptionButton;
@@ -75,20 +82,18 @@ export default {
   watch: {
     // 옵션창외 다른 곳을 클릭하면 옵션창 닫기
     currentClickNode(clickNode) {
-      if (clickNode === this.postOptionButton) {
-        this.isShowOption = true;
-        return;
+      if (clickNode !== this.postOptionButton) {
+        this.isShowOption = false;
       }
-      this.isShowOption = false;
     },
   },
   methods: {
     // 상세시간보기
-    onUpdatedTime() {
+    showUpdatedTime() {
       this.isShowUpdatedTime = true;
     },
     // 상세시간닫기
-    offUpdatedTime() {
+    hideUpdatedTime() {
       this.isShowUpdatedTime = false;
     },
   },

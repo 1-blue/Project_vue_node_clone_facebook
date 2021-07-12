@@ -105,8 +105,8 @@ export default {
   },
   mounted() {
     // 링크 데코레이션 초기값 지정
-    this.$store.state["link/currentLink"] = this._$home;
-    this.$store.state["link/homeLink"] = this._$home;
+    this.$store.state.link.currentLink = this._$home;
+    this.$store.state.link.homeLink = this._$home;
 
     this.linkDecoration(this._$home);
     // 최초 로그인시에만 실행하도록 변경해야함

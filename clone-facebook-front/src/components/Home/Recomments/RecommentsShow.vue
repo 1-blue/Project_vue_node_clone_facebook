@@ -17,7 +17,7 @@
 
     <form-comments-option
       :username="username"
-      @show:editCommentFrom="togleIsShowCommentsEditForm"
+      @show:editCommentFrom="$emit('show:editRecommentsInput')"
       @delete:comments="onDeleteRecomments"
       v-if="isShowRecommentsOptionForm"
     ></form-comments-option>
@@ -27,7 +27,7 @@
 <script>
 import { deleteRecomments } from "@/api/index.js";
 import ProfileImage from "@/components/common/ProfileImage.vue";
-import RecommentsContents from "@/components/recomments/RecommentsContents.vue";
+import RecommentsContents from "@/components/Home/Recomments/RecommentsContents.vue";
 import FormCommentsOption from "@/components/form/FormCommentsOption.vue";
 
 export default {

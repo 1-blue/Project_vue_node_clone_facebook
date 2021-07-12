@@ -4,7 +4,7 @@
     <h1>여러 링크들</h1>
 
     <!-- 메인페이지 중간영역 -->
-    <section-post :postList="postList" @fetch:postList="fetchPostList"></section-post>
+    <section-post :postList="postList"></section-post>
 
     <!-- 메인페이지 우측영역 -->
     <h1>친구관련정보들</h1>
@@ -24,7 +24,10 @@ export default {
   },
   data() {
     return {
+      // 게시글들
       postList: [],
+
+      // 한번에 가져올 포스트 개수
       fetchPostNumber: 5,
     };
   },
@@ -37,9 +40,10 @@ export default {
     this.$filter.emitter.on("fetch:postList", this.fetchPostList);
 
     // 게시글 추가로 패치
-    this.$filter.emitter.on("fetch:appendPost", this.fetchAppendPost);
+    this.$filter.emitter.on("fetch:appendPost", this.fetchAppendPostList);
   },
   methods: {
+    // 게시글들 가져오기
     async fetchPostList() {
       try {
         const { response } = await fetchPost(this.fetchPostNumber);
@@ -47,17 +51,18 @@ export default {
       } catch (error) {
         if (error.response) {
           switch (error.response.status) {
-            case 500:
+            case 503:
               alert(error.response.message);
+              console.error("서버측 에러 by HomePage.vue", error.response.error);
               break;
           }
         } else {
-          console.error("HomePage.vue >> ", error);
+          console.error("클라이언트측 에러 by HomePage.vue ", error);
         }
       }
     },
     // 게시글 추가로 패치하기
-    fetchAppendPost() {
+    fetchAppendPostList() {
       this.fetchPostNumber += 5;
       this.fetchPostList();
     },

@@ -11,10 +11,10 @@
           :username="username"
           :contents="contents"
           :isShowCommentsOptionButton="isShowCommentsOptionButton"
-          :isShowCommentsOptionForm="isShowCommentsOptionForm"
+          @toggle:showCommentsOptionForm="toggleIsShowCommentsOptionForm"
+          @change:showCommentsOptionForm="changeIsShowCommentsOptionForm"
           @mouseenter="onIsShowCommentsOptionButton"
           @mouseleave="offIsShowCommentsOptionButton"
-          @toggle:showCommentsOptionForm="toggleIsShowCommentsOptionForm"
         ></comments-contents>
 
         <!-- 댓글밑에 추가정보 및 기능 -->
@@ -28,7 +28,7 @@
       <comments-input
         :profileImage="profileImage"
         :contents="contents"
-        @submit:comments="onEditComments"
+        @append:comments="onEditComments"
         @close:commentInput="offIsShowCommentsEditForm"
         v-if="isShowCommentsEditForm"
       ></comments-input>
@@ -47,13 +47,13 @@
 <script>
 import { editComments, deleteComments } from "@/api/index.js";
 import ProfileImage from "@/components/common/ProfileImage.vue";
-import CommentsContents from "@/components/comments/CommentsContents.vue";
-import CommentsFooter from "@/components/comments/CommentsFooter.vue";
+import CommentsContents from "@/components/Home/Comments/CommentsContents.vue";
+import CommentsFooter from "@/components/Home/Comments/CommentsFooter.vue";
 import FormCommentsOption from "@/components/form/FormCommentsOption.vue";
-import CommentsInput from "@/components/comments/CommentsInput.vue";
+import CommentsInput from "@/components/common/CommentsInput.vue";
 
 export default {
-  name: "CommentsShow",
+  name: "CommentsComponent",
   components: {
     ProfileImage,
     CommentsContents,
@@ -92,6 +92,7 @@ export default {
     },
   },
   methods: {
+    // 댓글 수정 및 삭제 PostFooter.vue로 옮길지 말지 나중에... 아ㅏㅏㅏㅏㅏㅏㅏㅏ
     // 댓글수정
     async onEditComments(contents) {
       try {
@@ -99,14 +100,19 @@ export default {
         this.$emit("fetch:comments");
         this.offIsShowCommentsEditForm();
       } catch (error) {
-        switch (error.response.status) {
-          case 503:
-            alert(error.response.data.message);
-            break;
+        if (error.response) {
+          switch (error.response.status) {
+            case 503:
+              alert(error.response.message);
+              break;
 
-          default:
-            alert("알 수 없는 에러 by CommentsShow.vue");
-            break;
+            default:
+              alert("알 수 없는 에러 by CommentsComponent.vue");
+              console.error("서버측 에러 by CommentsComponent.vue", error);
+              break;
+          }
+        } else {
+          console.error("클라이언트측 에러 by CommentsComponent.vue", error);
         }
       }
     },
@@ -116,34 +122,46 @@ export default {
         await deleteComments(this.commentsId);
         this.$emit("fetch:comments");
       } catch (error) {
-        switch (error.response.status) {
-          case 503:
-            alert(error.response.data.message);
-            break;
+        if (error.response) {
+          switch (error.response.status) {
+            case 503:
+              alert(error.response.message);
+              break;
 
-          default:
-            alert("알 수 없는 에러 by FormCommentsOption.vue");
-            break;
+            default:
+              alert("알 수 없는 에러 by CommentsComponent.vue");
+              console.error("서버측 에러 by CommentsComponent.vue", error);
+              break;
+          }
+        } else {
+          console.error("클라이언트측 에러 by CommentsComponent.vue", error);
         }
       }
     },
-    // 댓글옵션버튼 보일지말지
+    // 댓글옵션버튼 보임
     onIsShowCommentsOptionButton() {
       this.isShowCommentsOptionButton = true;
     },
+    // 댓글옵션버튼 안보임
     offIsShowCommentsOptionButton() {
       this.isShowCommentsOptionButton = false;
     },
-    // 댓글 수정폼 보일지말지
+    // 댓글옵션폼 보일지말지 토글
+    toggleIsShowCommentsOptionForm() {
+      this.isShowCommentsOptionForm = !this.isShowCommentsOptionForm;
+    },
+    // 댓글옵션폼 보일지말지
+    changeIsShowCommentsOptionForm(value) {
+      this.isShowCommentsOptionForm = value;
+    },
+    // 댓글 수정폼 토글
     togleIsShowCommentsEditForm() {
       this.isShowCommentsEditForm = !this.isShowCommentsEditForm;
+      this.changeIsShowCommentsOptionForm(false);
     },
+    // 댓글 수정폼 닫기
     offIsShowCommentsEditForm() {
       this.isShowCommentsEditForm = false;
-    },
-    // 댓글옵션폼 보일지말지 토글
-    toggleIsShowCommentsOptionForm(value) {
-      this.isShowCommentsOptionForm = value;
     },
   },
 };

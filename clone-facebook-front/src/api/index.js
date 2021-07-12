@@ -309,7 +309,7 @@ async function fetchPostOfComments(postId, commentsCount) {
 }
 
 // 게시글의 댓글개수 가져오기
-async function getCommentsCount(PostId) {
+async function getTotalCommentsNumber(PostId) {
   try {
     const { data } = await instance.get("/comments/count", {
       params: {
@@ -374,8 +374,8 @@ async function fetchCommentsOfRecomments(commentId, recommentsCount) {
   }
 }
 
-// 게시글의 대댓글개수 가져오기
-async function getRecommentsCount(CommentId) {
+// 댓글의 대댓글개수 가져오기
+async function getTotalRecommentsNumber(CommentId) {
   try {
     const { data } = await instance.get("/recomments/count", {
       params: {
@@ -434,13 +434,13 @@ export {
   removeLike,
   fetchPostOfComments,
   uploadComments,
-  getCommentsCount,
+  getTotalCommentsNumber,
   getPostCount,
   deleteComments,
   editComments,
   uploadRecomments,
   fetchCommentsOfRecomments,
-  getRecommentsCount,
+  getTotalRecommentsNumber,
   deleteRecomments,
   editRecomments,
 };

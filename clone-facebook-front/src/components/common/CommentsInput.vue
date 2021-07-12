@@ -1,5 +1,5 @@
 <template>
-  <section id="comments__input">
+  <li id="comments__input">
     <profile-image :profileImage="profileImage"></profile-image>
     <form class="form__comments" @submit.prevent>
       <textarea
@@ -8,14 +8,14 @@
         class="textarea__comments"
         rows="1"
         :value="contents"
-        @keyup="resize"
+        @keyup="resizeContentsBox"
         @keydown.shift.enter="notThing"
-        @keydown.enter.exact.prevent="submitComments"
+        @keydown.enter.exact.prevent="appendComments"
         @keydown.esc.exact="$emit('close:commentInput')"
         v-focus="isFocus"
       />
     </form>
-  </section>
+  </li>
 </template>
 
 <script>
@@ -39,22 +39,26 @@ export default {
   },
   data() {
     return {
+      // 프로필이미지 이름
       profileImage: "",
     };
   },
   async created() {
+    // 로그인한 유저의 프로필이미지이름 가져오기
     const { name } = await getProfileImage();
     this.profileImage = name;
   },
   methods: {
-    resize(e) {
+    // 입력창 자동 사이즈조절
+    resizeContentsBox(e) {
       e.target.style.height = e.target.scrollHeight + "px";
     },
-    async submitComments(e) {
+    // 댓글 추가
+    async appendComments(e) {
       if (!e.target.value) {
         return alert("내용을 입력해주세요");
       }
-      this.$emit("submit:comments", e.target.value);
+      this.$emit("append:comments", e.target.value);
       e.target.value = "";
     },
   },
@@ -78,7 +82,7 @@ export default {
   border: none;
   background: var(--gray-color);
   padding: 0.5rem;
-  resize: none;
+  resizecontentsbox: none;
   overflow: hidden;
 }
 </style>

@@ -12,12 +12,13 @@
       :commentsId="commentsId"
       :isShowRecommentsInput="isShowRecommentsInput"
       @close:commentInput="closeRecommentsInput"
+      @show:editRecommentsInput="showRecommentsInput"
     ></recomments-container>
   </section>
 </template>
 
 <script>
-import RecommentsContainer from "@/components/recomments/RecommentsContainer.vue";
+import RecommentsContainer from "@/components/Home/Recomments/RecommentsContainer.vue";
 
 export default {
   name: "CommentsFooter",
@@ -36,6 +37,7 @@ export default {
   },
   data() {
     return {
+      // 답글의 입력창 보여줄지말지
       isShowRecommentsInput: false,
     };
   },
@@ -52,6 +54,10 @@ export default {
     // 답글창 닫기
     closeRecommentsInput() {
       this.isShowRecommentsInput = false;
+    },
+    // 답글창 열기
+    showRecommentsInput() {
+      this.isShowRecommentsInput = true;
     },
   },
 };

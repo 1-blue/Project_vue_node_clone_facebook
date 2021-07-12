@@ -11,7 +11,7 @@ import { uploadPost } from "@/api/index.js";
 import FormPost from "@/components/CreatePost/FormPost.vue";
 
 export default {
-  name: "PostPage",
+  name: "CreatePostPage",
   components: {
     FormPost,
   },
@@ -26,7 +26,12 @@ export default {
         // HomePage.vue에서 사용하며 게시글목록을 다시 패치받음
         this.$filter.emitter.emit("fetch:postList");
 
-        // 메인페이지로 이동
+        console.log("?11??");
+
+        // 클릭링크 Home으로 변경
+        this.$store.dispatch("link/CHANGE_HOME_LINK");
+
+        // home으로 링크이동
         this.$router.push("/");
       } catch (error) {
         if (error.response) {

@@ -49,12 +49,6 @@ export default {
 
       // 게시글 생성 이벤트 전송
       this.$emit("submit:post", this.title, this.contents); // ===================== 의문 =====================
-
-      // 클릭링크 Home으로 변경
-      this.$store.dispatch("link/CHANGE_HOME_LINK");
-
-      // home으로 링크이동
-      this.$router.push("/");
     },
   },
 };

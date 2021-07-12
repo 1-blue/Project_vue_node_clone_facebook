@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent class="form__login">
     <!-- 아이디 -->
-    <input type="text" placeholder="아이디입력" class="input__id" v-model="information.id" />
+    <input type="text" placeholder="아이디입력" class="input__id" v-focus="true" v-model="information.id" />
 
     <!-- 비밀번호 -->
     <div class="container__password">

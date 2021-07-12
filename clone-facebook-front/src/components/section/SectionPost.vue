@@ -2,12 +2,7 @@
   <section id="section__post">
     <!-- 게시글리스트 -->
     <ul class="post__container">
-      <post-one
-        v-for="post in postList"
-        :key="post._id"
-        :post="post"
-        @fetch:postList="$emit('fetch:postList')"
-      ></post-one>
+      <post-one v-for="post in postList" :key="post._id" :post="post"></post-one>
     </ul>
 
     <!-- 게시글더불러오기 -->
@@ -21,7 +16,7 @@
 
 <script>
 import { getPostCount } from "@/api/index.js";
-import PostOne from "@/components/post/PostOne.vue";
+import PostOne from "@/components/Home/Post/PostOne.vue";
 
 export default {
   name: "SectionPost",
@@ -36,16 +31,24 @@ export default {
   },
   data() {
     return {
-      postCount: 0,
+      // 전체 게시글 개수
+      totalPostNumber: 0,
     };
   },
   computed: {
+    // 전체 포스트를 패치받았는지 판단할 변수
     isEnd() {
-      return this.postCount === this.postList.length;
+      return this.totalPostNumber === this.postList.length;
     },
   },
   async created() {
-    this.postCount = await getPostCount();
+    await this.fetchTotalPostNumber();
+  },
+  methods: {
+    // 총 포스트 개수 가져오기
+    async fetchTotalPostNumber() {
+      this.totalPostNumber = await getPostCount();
+    },
   },
 };
 </script>
