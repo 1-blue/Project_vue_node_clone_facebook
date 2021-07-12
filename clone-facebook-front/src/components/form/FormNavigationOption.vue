@@ -63,9 +63,9 @@ export default {
     async logout() {
       try {
         await authLogout();
-        this.$store.dispatch("LOGOUT");
+        this.$store.dispatch("auth/LOGOUT");
         alert("로그아웃이 완료되었습니다. 로그인페이지로 이동합니다.");
-        this.$router.push("/login");
+        this.$router.push("/auth");
       } catch (error) {
         switch (error.response.status) {
           // 로그아웃중 발생한 에러

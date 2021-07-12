@@ -8,7 +8,7 @@
 
 <script>
 import { uploadPost } from "@/api/index.js";
-import FormPost from "@/components/form/FormPost.vue";
+import FormPost from "@/components/CreatePost/FormPost.vue";
 
 export default {
   name: "PostPage",
@@ -16,24 +16,30 @@ export default {
     FormPost,
   },
   methods: {
+    // 게시글 생성
     async submitPost(title, contents) {
       try {
         const { response } = await uploadPost({ title, contents });
 
         alert(`"${response.title}"이 생성되었습니다. 메인페이지로 이동합니다.`);
 
+        // HomePage.vue에서 사용하며 게시글목록을 다시 패치받음
         this.$filter.emitter.emit("fetch:postList");
 
+        // 메인페이지로 이동
         this.$router.push("/");
       } catch (error) {
         if (error.response) {
+          // 서버측 코드 에러
           switch (error.response.status) {
-            case 500:
+            case 503:
               alert(error.response.message);
+              console.error(error.response.error);
               break;
           }
         } else {
-          console.error("PostPage.vue >> ", error);
+          // 알 수 없는 에러
+          console.error("알 수 없는 에러 by PostPage.vue >> ", error);
         }
       }
     },

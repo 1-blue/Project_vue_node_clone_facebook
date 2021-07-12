@@ -17,7 +17,7 @@
     </div>
 
     <!-- 로그인버튼 -->
-    <button type="submit" class="button__submit" @click="login">로그인</button>
+    <button type="submit" class="button__submit" @click="$emit('submit:login', information)">로그인</button>
 
     <!-- 회원가입폼열기버튼 -->
     <button type="button" class="button__new__account" @click="$emit('change:isRegister')">새 계정 만들기</button>
@@ -25,8 +25,6 @@
 </template>
 
 <script>
-import { authLogin } from "@/api/index.js";
-
 export default {
   name: "FormLogin",
   props: {
@@ -45,38 +43,7 @@ export default {
   },
   computed: {
     passwordType() {
-      return this.isBlind === true ? "password" : "text";
-    },
-  },
-  methods: {
-    async login() {
-      try {
-        const data = await authLogin(this.information);
-        this.$store.dispatch("auth/SET_USER", data);
-        this.$router.push("/");
-      } catch (error) {
-        console.log(error);
-        switch (error.response.status) {
-          // 로그인후에 로그인접근하는 경우
-          case 403:
-            alert(error.response.data.message);
-            break;
-
-          // 아이디나 비밀번호 불일치
-          case 409:
-            alert(error.response.data.message);
-            break;
-
-          // 서버측 DB에러
-          case 500:
-            alert("서버측 에러입니다. 잠시후에 다시 로그인해주세요.");
-            break;
-
-          default:
-            alert(`${error} by LoginForm`);
-            break;
-        }
-      }
+      return this.isBlind ? "password" : "text";
     },
   },
 };

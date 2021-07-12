@@ -28,14 +28,15 @@ const routes = [
   },
   {
     path: "/post",
-    name: "PostPage",
-    component: () => import("@/views/PostPage.vue"),
+    name: "CreatePostPage",
+    component: () => import("@/views/CreatePostPage.vue"),
     meta: { requiresAuth: true },
   },
   {
-    path: "/login",
-    name: "LoginPage",
-    component: () => import("@/views/LoginPage.vue"),
+    path: "/auth",
+    name: "AuthPage",
+    component: () => import("@/views/AuthPage.vue"),
+    meta: { requiresAuth: false },
   },
 ];
 
@@ -44,12 +45,15 @@ const router = createRouter({
   routes,
 });
 
+// 여기 오류있음
 router.beforeEach((to, from, next) => {
   // 로그인해야 접근가능한페이지이면
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // 로그인 안했을경우
     if (!store.getters["auth/isLogin"]) {
-      return next({ path: "/login" });
+      router.push("/auth");
+      return next();
+      // return next({ path: "/auth" });    // 이거 왜 오류나는건가...?
     }
     next();
   } else {

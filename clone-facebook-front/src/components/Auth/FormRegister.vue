@@ -1,5 +1,9 @@
 <template>
-  <form class="form__register" @submit.prevent enctype="multipart/form-data">
+  <form
+    class="form__register"
+    enctype="multipart/form-data"
+    @submit.prevent="$emit('submit:register', information, $refs.profileImage)"
+  >
     <ul class="register__form__container">
       <!-- 제목 및 종료버튼 -->
       <li>
@@ -35,45 +39,59 @@
         </div>
         <div class="input__radio__wrapper">
           <label for="female">여성</label>
-          <input type="radio" id="female" name="gender" class="input__radio" :value="false" v-model="information.gender" />
+          <input
+            type="radio"
+            id="female"
+            name="gender"
+            class="input__radio"
+            :value="false"
+            v-model="information.gender"
+          />
         </div>
       </li>
 
       <!-- 태어난날 -->
       <li class="select__birthday__container">
         <select name="year" id="year" class="select__birthday__wrapper" v-model="information.year">
-          <option :value="year" v-for="year in yearList" :key="year">{{ year }}</option>
+          <!-- 2021년이라서 +1921했음 -->
+          <option :value="year + 1921" v-for="year in 100" :key="year">{{ year + 1921 }}</option>
         </select>
         <select name="month" id="month" class="select__birthday__wrapper" v-model="information.month">
-          <option :value="month" v-for="month in monthList" :key="month">{{ month }}</option>
+          <option :value="month" v-for="month in 12" :key="month">{{ month }}</option>
         </select>
         <select name="day" id="day" class="select__birthday__wrapper" v-model="information.day">
-          <option :value="day" v-for="day in dayList" :key="day">{{ day }}</option>
+          <option :value="day" v-for="day in 31" :key="day">{{ day }}</option>
         </select>
       </li>
 
       <!-- 프로필이미지 -->
       <li class="profile__image__container">
         <label for="profile__image" class="label__profile__image">프로필이미지</label>
-        <input type="file" name="profileImage" accept="image/*" id="profile__image" @change="getProfileImageName" ref="profileImage" />
+        <input
+          type="file"
+          name="profileImage"
+          accept="image/*"
+          id="profile__image"
+          @change="onChangeProfileImage"
+          ref="profileImage"
+        />
         <span class="select__profile__image__name">{{ profileImageName }}</span>
       </li>
 
       <!-- 가입버튼 -->
       <li>
-        <button type="submit" class="button__register" @click="register">가입하기</button>
+        <button type="submit" class="button__register">가입하기</button>
       </li>
     </ul>
   </form>
 </template>
 
 <script>
-import { applyRegister } from "@/api/index.js";
-
 export default {
   name: "FormRegister",
   data() {
     return {
+      // 회원가입하는 유저의 정보를 저장할 객체
       information: {
         name: "",
         id: "",
@@ -85,105 +103,18 @@ export default {
         day: 0,
         profileImage: null,
       },
-      yearList: [],
-      monthList: [],
-      dayList: [],
       profileImageName: "",
     };
   },
   created() {
-    // 년도 채워넣기
-    this.yearList = Array(100)
-      .fill()
-      .map((v, i) => 1921 + i);
-
-    // 월 채워넣기
-    this.monthList = Array(12)
-      .fill()
-      .map((v, i) => 1 + i);
-
-    // 일 채워넣기
-    this.dayList = Array(31)
-      .fill()
-      .map((v, i) => 1 + i);
-
     // 기본값
     this.information.year = 1998;
     this.information.month = 11;
     this.information.day = 6;
   },
   methods: {
-    async register() {
-      // 이름적었는지 확인
-      if (this.information.name.length === 0) {
-        alert("이름을 적어주세요");
-        return;
-      }
-
-      // 아이디적었는지 확인
-      if (this.information.id.length === 0) {
-        alert("아이디를 적어주세요");
-        return;
-      }
-
-      // 패스워드적었는지 확인
-      if (this.information.password.length === 0) {
-        alert("비밀번호를 적어주세요");
-        return;
-      }
-
-      // 이메일 유효인증
-      if (!this.$filter.validateEmail(this.information.email)) {
-        alert("이메일이 유효한 형식이 아닙니다.");
-        return;
-      }
-
-      // 날짜형식변환
-      this.information.year = String(this.information.year);
-      if (this.information.month < 10) {
-        this.information.month = "0" + String(this.information.month);
-      }
-      if (this.information.day < 10) {
-        this.information.day = "0" + String(this.information.day);
-      }
-      this.information.birthday = `${this.information.year}-${this.information.month}-${this.information.day}`;
-
-      // 프로필이미지 등록
-      this.information.profileImage = this.$refs.profileImage.files[0];
-
-      // 서버로 전송
-      try {
-        await applyRegister(this.information);
-        alert("회원가입에 성공하셨습니다. 로그인페이지로 이동합니다.");
-        this.$emit("close:registerForm");
-      } catch (error) {
-        switch (error.response.status) {
-          // 이미 로그인한 상태
-          case 403:
-            alert(error.response.data.message);
-            break;
-
-          // 아이디나 이메일 중복시
-          case 409:
-            alert(error.response.data.message);
-            break;
-
-          // 서버측 에러
-          case 500:
-            alert("서버측 에러입니다. 잠시후에 다시시도해주세요");
-            break;
-
-          // 프로필이미지 업로드 에러
-          case 503:
-            alert(error.response.data.message);
-            break;
-
-          default:
-            break;
-        }
-      }
-    },
-    getProfileImageName(e) {
+    // 프로필이미지 선택시 화면에 보여주기 위한 메서드
+    onChangeProfileImage(e) {
       let temp = e.target.value;
       const index = temp.lastIndexOf("\\");
       this.profileImageName = temp.slice(index + 1);

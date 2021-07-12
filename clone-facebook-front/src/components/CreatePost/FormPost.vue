@@ -1,7 +1,7 @@
 <template>
   <form class="post__form" @submit.prevent>
     <input type="text" class="input__title" placeholder="제목을 입력해주세요" v-model.trim="title" />
-    <textarea class="input__contents" @keydown="resize" :placeholder="defaultText" v-model.trim="contents" />
+    <textarea class="input__contents" @keydown="resizeContentsBox" :placeholder="defaultText" v-model.trim="contents" />
     <button type="submit" class="btn" :class="{ btn__active: isSubmit }" @click="submitPost">
       <span class="btn__text">게 시</span>
     </button>
@@ -18,13 +18,15 @@ export default {
     };
   },
   computed: {
+    // 현재 로그인한 유저의 이름
     username() {
       return this.$store.state.auth.name;
     },
+    // textarea의 placeholder
     defaultText() {
       return `${this.username}님, 무슨 생각을 하고 계신가요?`;
     },
-    // 제출가능여부
+    // 제출가능여부판단
     isSubmit() {
       if (this.title.length === 0) return false;
       if (this.contents.length === 0) return false;
@@ -33,18 +35,25 @@ export default {
     },
   },
   methods: {
-    resize(e) {
+    // 줄바꿈시 textarea의 height가 자동조절됨
+    resizeContentsBox(e) {
       e.target.style.height = "1px";
       e.target.style.height = 12 + e.target.scrollHeight + "px";
     },
+    // 생성할 게시글 내용 전송
     submitPost() {
       if (!this.isSubmit) {
         alert("제목과 내용을 모두 입력하고 제출버튼을 눌러주세요");
         return;
       }
 
-      this.$emit("submit:post", this.title, this.contents);
-      this.$store.dispatch("CHANGE_HOME_LINK");
+      // 게시글 생성 이벤트 전송
+      this.$emit("submit:post", this.title, this.contents); // ===================== 의문 =====================
+
+      // 클릭링크 Home으로 변경
+      this.$store.dispatch("link/CHANGE_HOME_LINK");
+
+      // home으로 링크이동
       this.$router.push("/");
     },
   },
