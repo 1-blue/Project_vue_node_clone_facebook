@@ -54,7 +54,7 @@ router.post("/", isLoggedIn, async (req, res) => {
 
     return res.json({ response });
   } catch (error) {
-    return res.status(503).json({ message: "서버측 에러입니다. by comments => /post", error });
+    return res.status(503).json({ message: "서버측 에러입니다. by /comments의 post", error });
   }
 });
 
@@ -101,7 +101,7 @@ router.get("/count", isLoggedIn, async (req, res) => {
       include: {
         // 게시글의 댓글
         model: Comment,
-        attributes: [[sequelize.fn("count", "_id"), "commentCount"]],
+        attributes: [[sequelize.fn("count", "_id"), "totalCommentsNumber"]],
       },
     });
     res.json(response)

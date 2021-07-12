@@ -59,7 +59,7 @@ router.get("/info", isLoggedIn, async (req, res) => {
 
     return res.json(response);
   } catch (error) {
-    return res.status(503).json({ message: "서버측 에러입니다. by get => /post/userinfo", error });
+    return res.status(503).json({ message: "서버측 에러입니다. by /user/userinfo의 get", error });
   }
 });
 

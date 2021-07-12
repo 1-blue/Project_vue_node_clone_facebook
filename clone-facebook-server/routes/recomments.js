@@ -37,7 +37,7 @@ router.get("/", isLoggedIn, async (req, res) => {
     return res.json(response);
   } catch (error) {
     console.log(error);
-    return res.status(503).json({ message: "서버측 에러입니다. by get => /like", error });
+    return res.status(503).json({ message: "서버측 에러입니다. by /recomments의 get", error });
   }
 });
 
@@ -54,7 +54,7 @@ router.post("/", isLoggedIn, async (req, res) => {
 
     return res.json({ response });
   } catch (error) {
-    return res.status(503).json({ message: "서버측 에러입니다. by recomments => /post", error });
+    return res.status(503).json({ message: "서버측 에러입니다. by /recomments의 post", error });
   }
 });
 
@@ -69,7 +69,7 @@ router.delete("/", isLoggedIn, async (req, res) => {
 
     return res.json({ message: "delete success" });
   } catch (error) {
-    return res.status(503).json({ message: "서버측 에러입니다. by delete => /comments", error });
+    return res.status(503).json({ message: "서버측 에러입니다. by /recomments의 delete", error });
   }
 });
 
@@ -85,7 +85,7 @@ router.put("/", isLoggedIn, async (req, res) => {
 
     return res.json({ message: "edit success" });
   } catch (error) {
-    return res.status(503).json({ message: "서버측 에러입니다. by put => /comments", error });
+    return res.status(503).json({ message: "서버측 에러입니다. by /recomments의 put", error });
   }
 });
 
@@ -101,12 +101,12 @@ router.get("/count", isLoggedIn, async (req, res) => {
       include: {
         // 댓글의 대댓글
         model: Recomment,
-        attributes: [[sequelize.fn("count", "_id"), "recommentCount"]],
+        attributes: [[sequelize.fn("count", "_id"), "totalRecommentsNumber"]],
       },
     });
     res.json(response)
   } catch (error) {
-    res.json(error)
+    res.status(503).json({ message: "서버측 에러입니다. by /recomments/count의 get", error })
   }
 });
 

@@ -32,7 +32,7 @@ router.get("/", isLoggedIn, async (req, res) => {
     return res.json({ response });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "서버측 에러입니다. by get => /post", error });
+    return res.status(503).json({ message: "서버측 에러입니다. by /post의 get", error });
   }
 });
 
@@ -51,7 +51,7 @@ router.put("/", isLoggedIn, async (req, res) => {
 
     return res.json({ message: "delete success" });
   } catch (error) {
-    return res.status(503).json({ message: "서버측 에러입니다. by put => /post", error });
+    return res.status(503).json({ message: "서버측 에러입니다. by /post의 put", error });
   }
 });
 
@@ -66,7 +66,7 @@ router.delete("/", isLoggedIn, async (req, res) => {
 
     return res.json({ message: "delete success" });
   } catch (error) {
-    return res.status(500).json({ message: "서버측 에러입니다. by delete => /post", error });
+    return res.status(503).json({ message: "서버측 에러입니다. by /post의 delete", error });
   }
 });
 
@@ -76,7 +76,7 @@ router.get("/count", isLoggedIn, async (req, res) => {
     const response = await Post.count();
     res.json(response)
   } catch (error) {
-    res.json(error)
+    return res.status(503).json({ message: "서버측 에러입니다. by /post/count의 get", error });
   }
 });
 

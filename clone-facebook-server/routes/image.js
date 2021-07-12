@@ -146,7 +146,7 @@ router.delete("/cover", isLoggedIn, async (req, res) => {
     res.json({ message: "success" });
   } catch (error) {
     // DB에 저장된 이미지명 변경 실패
-    res.status(500).json({ message: "Failed to change coverImage By Database" });
+    res.status(503).json({ message: "Failed to change coverImage By Database" });
   }
 });
 
@@ -161,7 +161,7 @@ router.post("/userProfileImage", isLoggedIn, async (req, res) => {
 
     return res.json(response);
   } catch (error) {
-    return res.status(503).json({ message: "서버측 에러입니다. by get => /post/userinfo", error });
+    return res.status(503).json({ message: "서버측 에러입니다. by /post/userinfo의 get", error });
   }
 });
 
