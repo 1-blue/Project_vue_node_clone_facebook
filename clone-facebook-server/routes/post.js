@@ -16,7 +16,7 @@ router.post("/", isLoggedIn, async (req, res) => {
 
     return res.json({ response });
   } catch (error) {
-    return res.status(500).json({ message: "서버측 에러입니다. by post => /post", error });
+    return res.status(503).json({ message: "서버측 에러입니다. by /post의 post ", error });
   }
 });
 

@@ -41,12 +41,26 @@ user.profileImage컬럼값을 이용해서 클라이언트에서 서버에서 ex
 4. `<textarea>`내부 글자만큼 영역 늘리기는 되는데 줄이는 방법을 모르겠음... 늘릴때도 바로바로적용안됨 ( by PostComments.vue )
 5. /image get방식 cors오류남
 
+6. `form`컴포넌트를 만들었을경우
+```
+// 1. input을 데이터를 부모컴포넌트에 놔두는것이 좋은지 ( v-model사용해서 )
+// 2. emit("submit:post")같은거 할 때 emit과 같이 데이터를 올려주는 것이 좋은지?
+// by FormPost.vue
+```
+
+1. `router.beforeEach()`에서 `next("/login")`했을 때 오류나는 이유는? ( by router/index.js )
+2. `<img />`에 `height: 100%`사용시 부모크기보다 커지는 이유는? ( by Information/CoverImage.vue )
+
 ## 해야할것
 + 대댓글 fetch개수제한, 대댓글 삭제 및 수정
 + 댓글에 좋아요
 + 댓글정렬
 + 게시글에 이미지넣는 기능 추가
 + 내 정보 페이지 수정하기
++ 스피너 사용관련 코드
+
++ 답글 더 불러오기 구현
++ 답글 수정
 
 ## 사용한 것
 + vue.js
@@ -57,6 +71,8 @@ user.profileImage컬럼값을 이용해서 클라이언트에서 서버에서 ex
 + 이미지처리 => multer
 
 ## 오늘할거
-답글달기
+HomePage리팩토링하면됨
 
 ## 오늘한거
+답글삭제
+전체적으로 코드 리팩토링

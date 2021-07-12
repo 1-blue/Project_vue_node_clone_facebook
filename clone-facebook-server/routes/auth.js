@@ -61,7 +61,7 @@ router.post("/login", isNotLoggedIn, async (req, res) => {
 
     // 7. localStrategy에서 인증완료후 여기로 이동
     if (DBError) {
-      return res.status(500).send("DB error")
+      return res.status(503).send("DB error")
     }
     if (info) {
       return res.status(409).json({ message: info.message })
